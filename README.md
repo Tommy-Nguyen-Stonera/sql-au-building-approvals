@@ -32,7 +32,7 @@ The analysis is structured as a chain of questions, where each finding naturally
 
 1. **How has construction activity changed over time nationally?** This is the starting point. Before looking at anything specific, I needed to see the overall trajectory. Are we in a growth market or a declining one?
 
-2. **Which states drive the most construction?** Once I saw the national trend, I wanted to understand who the major players are. In building materials sales, knowing which state accounts for 31% of all approvals versus 1.4% changes everything about where you allocate resources.
+2. **Which states drive the most construction?** The national trend showed clear growth from 2010-2015, then a decline that has not fully recovered. That made me wonder: is this a nationwide pattern, or are some states masking the decline of others? If the national number is an average, which states are pulling it up and which are dragging it down? In building materials sales, knowing which state accounts for 31% of all approvals versus 1.4% changes everything about where you allocate resources.
 
 3. **How does NSW compare to VIC, QLD, and WA?** This is personal. I have worked across NSW my entire career, and I wanted to see how the state I know best stacks up against the other major markets. The finding here genuinely surprised me.
 
@@ -53,6 +53,8 @@ The analysis is structured as a chain of questions, where each finding naturally
 ### 1. Victoria dominates, and the gap is wider than you think
 Victoria leads the nation with 971,368 total approvals (31.1% market share) compared to NSW at 863,712 (27.6%). What struck me is that VIC has led NSW in 13 out of 16 years. NSW only briefly overtook VIC during the 2015-2017 Sydney apartment boom. For a building materials supplier, VIC is unambiguously the largest market.
 
+What I could not tell from the approval count alone was whether VIC's lead was driven by houses or apartments — a question that became important when I looked at dwelling types in Query 4.
+
 ### 2. NSW has fallen 40.8% from its peak and is not recovering
 NSW peaked at 74,699 approvals in 2016. By 2024, it was down to 44,185 - just 59.2% of its peak. The 2025 data (52,539) shows some recovery, but NSW remains the worst-performing major state over the last decade, with approvals down 22.9% comparing 2020-2024 to 2015-2019. As someone who works in NSW, this was the hardest finding to see in black and white.
 
@@ -65,8 +67,12 @@ In 2010, the average approval was worth $439,360. By 2025, it reached $1,017,764
 ### 5. January is the dead zone - 27.8% below November
 The seasonal pattern is stark: January averages just 1,563 approvals per state compared to November at 2,164. This 27.8% swing matters for inventory planning. May (2,161) and October (2,157) are also strong months. The pattern aligns with the construction calendar: councils process backlogs before Christmas, January is holiday shutdown, and activity ramps from February onwards.
 
+The obvious follow-up is whether this pattern varies by state or dwelling type. A January slump in Sydney might look very different from January in Queensland, where the weather does not shut down construction the same way.
+
 ### 6. Tasmania and SA are the only growth stories
 Only two states grew between 2015-2019 and 2020-2024: Tasmania (+16.2%) and South Australia (+6.8%). Every other state declined. The NT saw the steepest fall (-42.0%), reflecting the end of the mining construction boom. This finding has direct implications for where a national supplier should be expanding.
+
+The obvious follow-up is *why* these two smaller states bucked the national trend. Tasmania's growth coincided with a period of strong interstate migration and relative housing affordability — whether that is cause or coincidence would require linking this data with population and price data.
 
 ### 7. Post-recovery value keeps climbing while counts stagnate
 Since 2022, approval counts have been flat around 164,000-191,000 per year. But the total value has climbed from $153.8B (2022) to $198.8B (2025). This tells you the market is shifting toward fewer but more expensive projects - think large apartment developments and commercial builds rather than suburban house-and-land packages.
@@ -76,6 +82,8 @@ WA peaked at 33,088 approvals in 2014, collapsed to 14,023 by 2023 (-57.6%), the
 
 ### 9. The Queensland comeback is underway
 QLD dropped from 50,856 (2015) to 31,106 (2019), but has been climbing since - reaching 41,848 in 2025. The infrastructure pipeline for the 2032 Brisbane Olympics is likely a contributing factor. QLD is the state I would be watching most closely for the next five years.
+
+One issue I noticed early was that comparing raw approval counts across states is misleading without adjusting for state population. NSW and VIC look close in absolute terms, but on a per-capita basis, VIC's lead widens significantly. I chose to present absolute numbers because that is what matters for a supplier sizing a market, but the per-capita view tells a different story about building intensity.
 
 ## What Surprised Me
 
