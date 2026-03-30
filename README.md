@@ -1,4 +1,6 @@
 # Australian Building Approvals Analysis (T-SQL)
+> **[View Interactive Report](https://htmlpreview.github.io/?https://raw.githubusercontent.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/main/report/au_building_approvals_report.html)** — Full analysis with findings, methodology, and insights
+
 
 ![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
 ![T-SQL](https://img.shields.io/badge/T--SQL-003B57?style=for-the-badge&logo=database&logoColor=white)
