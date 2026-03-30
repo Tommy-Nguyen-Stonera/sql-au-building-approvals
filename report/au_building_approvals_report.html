@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Australian Building Approvals Analysis | Tommy Nguyen</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f6fa;
+            color: #2c3e50;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 4px;
+            background: linear-gradient(90deg, #e67e22, #f39c12, #e67e22);
+            z-index: 9999; transition: width 0.15s ease-out; width: 0%;
+        }
+
+        /* ===== COVER PAGE ===== */
+        .cover {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0c1a2e 0%, #1a2d47 40%, #243b5c 70%, #2c4a6e 100%);
+            color: #fff; text-align: center; padding: 2rem;
+            position: relative; overflow: hidden;
+        }
+        .cover::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(230, 126, 34, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(52, 152, 219, 0.06) 0%, transparent 50%);
+            animation: coverFloat 20s ease-in-out infinite;
+        }
+        @keyframes coverFloat { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-2%, -1%); } }
+        .cover-content { position: relative; z-index: 1; max-width: 800px; }
+        .cover-badge {
+            display: inline-block; padding: 0.4rem 1.2rem; border: 1px solid rgba(230, 126, 34, 0.5);
+            border-radius: 20px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+            color: #e67e22; margin-bottom: 1.5rem;
+        }
+        .cover h1 {
+            font-size: 3rem; font-weight: 700; margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e6ed 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cover .subtitle { font-size: 1.2rem; color: #8fa4bf; margin-bottom: 2rem; font-weight: 300; }
+        .cover .dataset-info {
+            display: inline-block; padding: 1rem 2rem; background: rgba(255,255,255,0.06);
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.85rem; color: #8fa4bf; line-height: 1.9;
+        }
+        .cover .dataset-info strong { color: #e0e6ed; }
+        .cover .author {
+            margin-top: 2rem; font-size: 0.9rem; color: #5a7a9a;
+        }
+        .cover .author a { color: #e67e22; text-decoration: none; }
+        .cover .scroll-hint {
+            position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); font-size: 0.75rem; letter-spacing: 1px;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+        /* ===== KPI CARDS ===== */
+        .kpi-strip {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem; padding: 2rem 3rem; max-width: 1200px; margin: -3rem auto 2rem;
+            position: relative; z-index: 2;
+        }
+        .kpi-card {
+            background: #fff; border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;
+            border-top: 3px solid #e67e22;
+        }
+        .kpi-card .kpi-value { font-size: 2rem; font-weight: 700; color: #0c1a2e; }
+        .kpi-card .kpi-label { font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+
+        /* ===== LAYOUT ===== */
+        .main-layout { display: flex; max-width: 1400px; margin: 0 auto; gap: 0; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 280px; position: sticky; top: 0; height: 100vh;
+            background: #0c1a2e; padding: 2rem 1.5rem; overflow-y: auto;
+            flex-shrink: 0;
+        }
+        .sidebar h3 { color: #e67e22; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+        .sidebar a {
+            display: block; padding: 0.5rem 0.8rem; margin-bottom: 0.3rem;
+            color: #8fa4bf; text-decoration: none; font-size: 0.85rem;
+            border-radius: 6px; transition: all 0.2s;
+            border-left: 2px solid transparent;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            color: #fff; background: rgba(230, 126, 34, 0.1);
+            border-left-color: #e67e22;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content { flex: 1; padding: 2rem 3rem; min-width: 0; }
+
+        /* ===== SECTION ===== */
+        .section {
+            margin-bottom: 3rem; opacity: 0; transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        .section.visible { opacity: 1; transform: translateY(0); }
+        .section-header {
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem; border-bottom: 2px solid #eaecef;
+        }
+        .section-number {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .section-title { font-size: 1.4rem; font-weight: 600; color: #0c1a2e; }
+
+        /* ===== RESEARCH QUESTION CARD ===== */
+        .research-question {
+            background: linear-gradient(135deg, #0c1a2e, #1a2d47);
+            color: #fff; padding: 1.5rem 2rem; border-radius: 10px;
+            margin-bottom: 1.5rem; position: relative;
+        }
+        .research-question::before {
+            content: '?'; position: absolute; top: -8px; right: 20px;
+            font-size: 3rem; font-weight: 700; color: rgba(230, 126, 34, 0.15);
+        }
+        .research-question h4 { color: #e67e22; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .research-question p { font-size: 1.05rem; color: #c8d6e5; line-height: 1.6; }
+
+        /* ===== SQL BADGE ===== */
+        .sql-badge {
+            display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+        .sql-badge.cte { background: #e8f4fd; color: #2980b9; }
+        .sql-badge.window { background: #fdf2e9; color: #d35400; }
+        .sql-badge.pivot { background: #eafaf1; color: #27ae60; }
+        .sql-badge.case-expr { background: #f4ecf7; color: #8e44ad; }
+        .sql-badge.join { background: #fdedec; color: #c0392b; }
+        .sql-badge.aggregate { background: #fef9e7; color: #f39c12; }
+
+        /* ===== APPROACH PARAGRAPH ===== */
+        .approach {
+            background: #f8f9fa; padding: 1.2rem 1.5rem; border-radius: 8px;
+            border-left: 3px solid #3498db; margin-bottom: 1.5rem;
+            font-size: 0.9rem; color: #555;
+        }
+
+        /* ===== KEY INSIGHT CARDS ===== */
+        .insight-card {
+            background: #fff; border-left: 4px solid #e67e22; border-radius: 8px;
+            padding: 1.2rem 1.5rem; margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+        .insight-card .insight-label {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #e67e22; font-weight: 600; margin-bottom: 0.4rem;
+        }
+        .insight-card .insight-stat {
+            font-size: 1.3rem; font-weight: 700; color: #0c1a2e; margin-bottom: 0.3rem;
+        }
+        .insight-card .insight-detail { font-size: 0.88rem; color: #555; }
+
+        /* ===== IMPLICATION CARD ===== */
+        .implication-card {
+            background: linear-gradient(135deg, #fdf2e9, #fef9e7);
+            border: 1px solid #f0d9b5; border-radius: 10px;
+            padding: 1.5rem; margin-top: 1.5rem;
+        }
+        .implication-card .impl-label {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #d35400; font-weight: 600; margin-bottom: 0.5rem;
+        }
+        .implication-card p { font-size: 0.92rem; color: #6d4c20; line-height: 1.7; }
+
+        /* ===== FOOTER ===== */
+        .report-footer {
+            text-align: center; padding: 3rem 2rem; background: #0c1a2e; color: #5a7a9a;
+            font-size: 0.85rem;
+        }
+        .report-footer a { color: #e67e22; text-decoration: none; }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .progress-bar, .sidebar, .scroll-hint { display: none !important; }
+            .cover { min-height: auto; padding: 3rem 2rem; page-break-after: always; }
+            .main-layout { display: block; }
+            .content { padding: 1rem; }
+            .section { opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+            .kpi-strip { margin-top: 0; }
+            body { background: #fff; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .content { padding: 1.5rem; }
+            .cover h1 { font-size: 2.2rem; }
+            .kpi-strip { padding: 2rem 1.5rem; }
+        }
+        @media (max-width: 600px) {
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1.5rem 1rem; }
+            .cover h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ===== COVER PAGE ===== -->
+<div class="cover">
+    <div class="cover-content">
+        <div class="cover-badge">SQL Portfolio Project</div>
+        <h1>Australian Building Approvals Analysis</h1>
+        <p class="subtitle">A data-driven investigation into 16 years of construction trends across every state and territory, by someone who works in the industry</p>
+        <div class="dataset-info">
+            <strong>Source:</strong> Australian Bureau of Statistics (ABS) &mdash; Cat. 8731.0<br>
+            <strong>Period:</strong> January 2010 &ndash; January 2026 (192 months)<br>
+            <strong>Scope:</strong> 3.1 million dwelling approvals | $1.97 trillion in approved value<br>
+            <strong>Engine:</strong> T-SQL (SQL Server) &mdash; CTEs, window functions, PIVOT
+        </div>
+        <div class="author">
+            <strong style="color: #c8d6e5;">Tommy Nguyen</strong><br>
+            <a href="https://github.com/Tommy-Nguyen-Stonera">GitHub</a> &middot;
+            <a href="https://tommy-nguyen-stonera.vercel.app">Portfolio</a>
+        </div>
+    </div>
+    <div class="scroll-hint">SCROLL TO EXPLORE</div>
+</div>
+
+<!-- ===== KPI STRIP ===== -->
+<div class="kpi-strip">
+    <div class="kpi-card">
+        <div class="kpi-value">3.1M</div>
+        <div class="kpi-label">Total Approvals</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-value">$1.97T</div>
+        <div class="kpi-label">Total Value</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-value">16</div>
+        <div class="kpi-label">Years Covered</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-value">8</div>
+        <div class="kpi-label">States &amp; Territories</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-value">9</div>
+        <div class="kpi-label">Research Queries</div>
+    </div>
+</div>
+
+<!-- ===== MAIN LAYOUT ===== -->
+<div class="main-layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <h3>Contents</h3>
+        <a href="#q1">1. National Overview</a>
+        <a href="#q2">2. State Market Share</a>
+        <a href="#q3">3. NSW vs Major States</a>
+        <a href="#q4">4. Dwelling Type Mix</a>
+        <a href="#q5">5. Seasonal Patterns</a>
+        <a href="#q6">6. COVID-19 Impact</a>
+        <a href="#q7">7. Rolling Averages</a>
+        <a href="#q8">8. Value Trend</a>
+        <a href="#q9">9. Growth States</a>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+        <!-- ===== QUERY 1 ===== -->
+        <div class="section" id="q1">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">National Overview &mdash; Total Approvals by Year</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>How has national construction activity changed over the last 16 years? Are we in a growth market or a declining one?</p>
+            </div>
+
+            <span class="sql-badge cte">CTE</span>
+            <span class="sql-badge window">LAG() Window Function</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Aggregate all approvals by year using a CTE, then apply the LAG() window function to calculate year-over-year growth rates for both approval counts and total value. The two-CTE structure separates the base aggregation from the growth calculation for readability.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">Peak: 239,735 approvals (2015)</div>
+                <div class="insight-detail">National approvals hit their highest point in 2015 and have never returned to that level. The market has been in a structural decline in volume terms, despite periodic stimulus-driven bounces.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">2019 saw -16.5% decline</div>
+                <div class="insight-detail">The sharpest single-year drop came in 2019 (176,611 approvals), well before COVID. This was driven by the apartment construction correction and tightening lending standards after the Royal Commission into banking.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">2021 stimulus bounce: +22.2%</div>
+                <div class="insight-detail">HomeBuilder grants and record-low interest rates drove approvals to 228,995 in 2021. But the bounce was temporary &mdash; approvals crashed -16.3% in 2022 and a further -14.3% in 2023.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>For a building materials supplier, the era of volume growth appears to be over. Strategy should shift from "sell more units" to "capture higher-value projects." The data shows total value continuing to climb even as counts decline, suggesting a market restructuring toward fewer, more expensive builds.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 2 ===== -->
+        <div class="section" id="q2">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">State Market Share &mdash; Ranking by Approvals and Value</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>Which states drive the most construction, and what is each state's share of the national market?</p>
+            </div>
+
+            <span class="sql-badge cte">CTE</span>
+            <span class="sql-badge window">RANK() Window Function</span>
+            <span class="sql-badge join">CROSS JOIN</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Aggregate total approvals and value by state, then use CROSS JOIN with a grand total subquery to calculate percentage market share. RANK() provides ordinal positioning for both volume and value, revealing whether a state punches above or below its weight.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">VIC leads with 31.1% market share (971,368 approvals)</div>
+                <div class="insight-detail">Victoria is the undisputed leader in construction volume, accounting for nearly a third of all national approvals. NSW follows at 27.6% (863,712). Together, these two states represent 58.7% of the market.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">Top 4 states = 89.4% of all approvals</div>
+                <div class="insight-detail">VIC (31.1%), NSW (27.6%), QLD (19.5%), and WA (11.2%) collectively account for nearly nine out of every ten approvals nationally. The remaining four jurisdictions (SA, ACT, TAS, NT) share the other 10.6%.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">NT: 0.6% of approvals but 1.0% of value</div>
+                <div class="insight-detail">The Northern Territory punches above its weight on value relative to volume, suggesting its approvals skew toward higher-cost projects (likely mining and government infrastructure). Conversely, TAS shows the opposite pattern.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>A national building materials strategy should allocate resources roughly proportional to market share: approximately 30% of sales effort in VIC, 28% in NSW, 20% in QLD, and 11% in WA. Smaller states can be served through distributors rather than direct sales teams.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 3 ===== -->
+        <div class="section" id="q3">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">NSW vs Major States &mdash; Year-over-Year Comparison</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>How does NSW construction compare to VIC, QLD, and WA over time? As someone who has worked across NSW for 5+ years, I wanted to see how my home state performs against the competition.</p>
+            </div>
+
+            <span class="sql-badge case-expr">CASE Expressions</span>
+            <span class="sql-badge aggregate">Conditional Aggregation</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Use conditional aggregation with CASE expressions to pivot state-level data into columns within a single query. This avoids multiple self-joins and makes the year-over-year comparison across states easy to read in a single result set.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">NSW led VIC in only 3 of 16 years (2015-2017)</div>
+                <div class="insight-detail">The NSW lead coincided with the Sydney apartment boom, driven by massive high-density developments in Parramatta, Sydney Olympic Park, and the CBD fringe. Once that cycle ended, VIC reasserted dominance.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">NSW 2024: 44,185 approvals (40.8% below 2016 peak)</div>
+                <div class="insight-detail">NSW's decline from its 2016 peak of 74,699 to 44,185 in 2024 is the steepest of any major state. The 2025 data (52,539) shows partial recovery, but NSW remains well below historical norms. Stamp duty costs and planning bottlenecks are likely contributors.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">QLD gaining ground: 41,848 approvals in 2025</div>
+                <div class="insight-detail">Queensland has been climbing steadily since bottoming out at 31,106 in 2019. The 2025 figure of 41,848 puts QLD closer to NSW (52,539) than at any point since 2013. The Brisbane Olympics infrastructure pipeline is likely accelerating this trend.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>For anyone with sales operations in NSW, the data is a warning: do not plan budgets based on 2015-2017 volumes. The current run rate is 40% lower. Consider rebalancing territory assignments toward QLD and VIC, which show stronger volume trajectories. The QLD opportunity, in particular, deserves attention ahead of the 2032 Olympics.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 4 ===== -->
+        <div class="section" id="q4">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">Dwelling Type Breakdown &mdash; Houses vs Apartments vs Other</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>What types of buildings are being approved, and has the mix between houses and higher-density dwellings shifted over time?</p>
+            </div>
+
+            <span class="sql-badge cte">CTE</span>
+            <span class="sql-badge join">JOIN</span>
+            <span class="sql-badge aggregate">Percentage Calculation</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Group approvals by year and dwelling type within the private sector, then calculate each type's percentage share using a JOIN against a year-level total CTE. This reveals how the composition of what gets built has shifted over the period.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">The dwelling mix directly affects material demand</div>
+                <div class="insight-detail">Houses require timber framing, roofing iron, and individual plumbing runs. Apartments need concrete, structural steel, fire-rated systems, and bulk glazing. Shifts between these types change what a building materials supplier needs to stock and in what quantities.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">Urban densification is a structural trend</div>
+                <div class="insight-detail">State governments across Australia have been pushing for more medium and high-density housing to address affordability. This policy direction, combined with land cost pressures in capital cities, means the mix will continue to shift toward multi-dwelling projects.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>Suppliers should monitor the dwelling mix at a state level to anticipate demand shifts. If apartment share is rising, invest in concrete and steel product lines. If house-and-land packages are dominant, ensure timber and roofing stock is adequate. The mix shift often leads demand changes by 6-12 months.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 5 ===== -->
+        <div class="section" id="q5">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2 class="section-title">Seasonal Patterns &mdash; Monthly Analysis</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>Do building approvals follow a predictable seasonal pattern? If so, which months are strongest and weakest, and what does this mean for planning?</p>
+            </div>
+
+            <span class="sql-badge pivot">PIVOT</span>
+            <span class="sql-badge aggregate">SUM Aggregation</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Use T-SQL PIVOT to transform monthly rows into a cross-tab calendar view, with years as rows and months as columns. ISNULL handles any gaps. This format makes it easy to spot seasonal patterns by reading across months or tracking a single month across years.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">January: 1,563 avg (27.8% below November peak)</div>
+                <div class="insight-detail">January is the clear dead zone for building approvals. This aligns with the construction calendar: councils are on reduced staffing, builders are on holiday, and approval applications submitted in December are still being processed.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">Strongest months: November (2,164), May (2,161), October (2,157)</div>
+                <div class="insight-detail">The November spike reflects councils pushing to clear approval backlogs before the Christmas break. May and October strength aligns with the start of the construction season (after summer rains in QLD/NT) and pre-Christmas project starts respectively.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">February recovery: +26.9% month-on-month from January</div>
+                <div class="insight-detail">The January-to-February jump is the largest monthly swing in the data. Approvals ramp quickly as councils return to full staffing and the pipeline of December/January submissions gets processed.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>Build inventory in October-November for the February-May rush. Do not panic about January slowdowns &mdash; they are structural, not cyclical. Sales teams should use January for relationship-building and pipeline development, knowing that conversion rates will spike from February onwards.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 6 ===== -->
+        <div class="section" id="q6">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2 class="section-title">COVID-19 Impact &mdash; Before, During, and After</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>How did COVID-19 impact building approvals? I lived through this on the ground &mdash; builders panicking in March 2020, then suddenly overwhelmed by demand six months later. What does the data actually show?</p>
+            </div>
+
+            <span class="sql-badge case-expr">CASE Period Classification</span>
+            <span class="sql-badge cte">CTE</span>
+            <span class="sql-badge aggregate">AVG / COUNT DISTINCT</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Classify each month into four periods using CASE expressions: Pre-COVID (2018-Feb 2020), COVID Impact (Mar-Dec 2020), Recovery (2021), and Post-Recovery (2022+). Then aggregate to compare average monthly approvals and value across each period, normalising for the different number of months in each window.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">COVID disruption was surprisingly short</div>
+                <div class="insight-detail">Average monthly approvals during the COVID impact period (15,994) were virtually identical to pre-COVID levels (15,984). The data suggests the disruption lasted weeks, not months. Construction was classified as essential and approvals continued to be processed.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">2021 recovery: 19,083 avg monthly (+19.4% above pre-COVID)</div>
+                <div class="insight-detail">The HomeBuilder grant ($25K for new builds, $15K for renovations) and record-low interest rates drove a genuine boom. Monthly approvals surged 19.4% above the pre-COVID baseline, creating supply chain pressure that persisted through 2022.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">Post-recovery: 15,115/month (5.4% below pre-COVID)</div>
+                <div class="insight-detail">Since 2022, monthly approvals have averaged 15,115 &mdash; slightly below the pre-COVID baseline. The stimulus effectively pulled demand forward from 2022-2023 into 2021, creating a hangover that the market is still working through.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>The lesson from COVID for building materials businesses: government stimulus can create short-term demand surges, but they pull forward future demand rather than creating new demand. Plan for 12-18 months of elevated activity followed by 24+ months of below-trend performance. Do not hire permanent staff or sign long-term warehouse leases based on stimulus-driven peaks.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 7 ===== -->
+        <div class="section" id="q7">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2 class="section-title">Rolling 12-Month Averages by State</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>Monthly data is noisy. What does the underlying trend look like for each major state when you smooth out the seasonal volatility?</p>
+            </div>
+
+            <span class="sql-badge window">AVG() OVER (ROWS BETWEEN)</span>
+            <span class="sql-badge cte">CTE</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Calculate a rolling 12-month average using AVG() with a window frame (ROWS BETWEEN 11 PRECEDING AND CURRENT ROW), partitioned by state. This strips out seasonal effects and one-off spikes, revealing the true trend direction. Only the four major states are included for clarity.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">VIC peaked mid-2017 and has been drifting down</div>
+                <div class="insight-detail">Victoria's rolling 12-month average peaked around mid-2017 at approximately 6,000 monthly approvals. It has been on a gradual downtrend since, punctuated by the 2021 stimulus bounce but never returning to the 2017 high.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">QLD is the only major state with a clearly positive trajectory</div>
+                <div class="insight-detail">Queensland's rolling average bottomed in mid-2019 and has been climbing steadily since. It is the only major state where the trend line heading into 2025 is unambiguously upward, making it the most interesting growth market.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">WA shows the most extreme volatility</div>
+                <div class="insight-detail">Western Australia's rolling average shows the widest swings &mdash; from peaks above 2,750 monthly (2014) to troughs below 1,200 (2023). This boom-bust pattern, driven by mining investment cycles, makes WA the hardest state to forecast.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>Use rolling averages, not raw monthly data, for capacity planning and sales forecasting. The 12-month window is long enough to strip out seasonality but short enough to capture genuine trend changes. When the rolling average for a state turns upward for 3+ consecutive months, that is a buy signal for inventory expansion in that market.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 8 ===== -->
+        <div class="section" id="q8">
+            <div class="section-header">
+                <div class="section-number">8</div>
+                <h2 class="section-title">Value Trend &mdash; Total Approval Value by Year</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>Where is the money going? Approval counts tell you about volume, but value reveals the economic weight and scale of projects being approved.</p>
+            </div>
+
+            <span class="sql-badge aggregate">SUM / ROUND</span>
+            <span class="sql-badge case-expr">CASE (Safe Division)</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Aggregate total approval value by year and calculate the average value per approval. The query uses CASE with a zero-check denominator for safe division. Values are presented in both millions and billions for readability at different scales.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">Value per approval: $439K (2010) to $1.02M (2025)</div>
+                <div class="insight-detail">The average value per approval has more than doubled in 15 years &mdash; a 131.7% increase. Even accounting for construction cost inflation (roughly 60-70% over this period), this suggests approvals are genuinely skewing toward larger, more complex projects.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">2025 record: $198.8 billion total value</div>
+                <div class="insight-detail">Total approval value hit $198.8B in 2025 &mdash; the highest year on record &mdash; despite approval counts being 18.5% below the 2015 peak. This is the strongest evidence that the market is restructuring, not shrinking. Fewer projects, but each one worth significantly more.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">Value growth outpaced volume growth every single year since 2018</div>
+                <div class="insight-detail">Since 2018, the total value of approvals has grown while the count has stagnated or declined. This persistent value-volume divergence indicates a fundamental market shift, not a temporary blip. The construction industry is building bigger, not more.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>Revenue per customer should be increasing if you are positioned in the right segment. Suppliers focused on high-value project materials (engineered stone, structural systems, premium finishes) are likely seeing revenue growth even in a "declining" market. Those dependent on volume-driven residential (standard bricks, basic timber) face the most headwinds.</p>
+            </div>
+        </div>
+
+        <!-- ===== QUERY 9 ===== -->
+        <div class="section" id="q9">
+            <div class="section-header">
+                <div class="section-number">9</div>
+                <h2 class="section-title">Growth States &mdash; 2020-2024 vs 2015-2019</h2>
+            </div>
+
+            <div class="research-question">
+                <h4>Research Question</h4>
+                <p>Which states are accelerating and which are losing momentum? If I were advising a building materials company on where to expand next, which markets would I choose?</p>
+            </div>
+
+            <span class="sql-badge cte">Dual CTEs</span>
+            <span class="sql-badge join">JOIN</span>
+            <span class="sql-badge aggregate">NULLIF (Safe Division)</span>
+
+            <div class="approach">
+                <strong>Approach:</strong> Compare total approvals in the most recent five-year window (2020-2024) against the prior five-year window (2015-2019) using two CTEs joined on state. Calculate both absolute change and percentage growth. NULLIF prevents divide-by-zero errors. ORDER BY Growth_Pct DESC reveals the acceleration ranking.
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #1</div>
+                <div class="insight-stat">Only 2 states grew: Tasmania (+16.2%) and SA (+6.8%)</div>
+                <div class="insight-detail">Tasmania added 2,247 approvals and South Australia added 4,003 comparing the two five-year windows. Every other state declined. The concentration of growth in smaller states suggests the major metros (Sydney, Melbourne) are hitting structural capacity limits in their approval pipelines.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #2</div>
+                <div class="insight-stat">NSW worst performer: -76,678 approvals (-22.9%)</div>
+                <div class="insight-detail">New South Wales lost more approvals in absolute terms than any other state. This is not just a percentage story &mdash; NSW shed 76,678 approvals, more than the entire Northern Territory and Tasmania combined across both periods. Planning reform and stamp duty remain key barriers.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-label">Key Insight #3</div>
+                <div class="insight-stat">NT collapsed: -42.0% (the mining bust effect)</div>
+                <div class="insight-detail">The Northern Territory's -42.0% decline reflects the end of the Ichthys LNG and INPEX construction boom. With no major resource project in the pipeline, the NT construction sector is structurally smaller than it was a decade ago.</div>
+            </div>
+
+            <div class="implication-card">
+                <div class="impl-label">Business Implication</div>
+                <p>If allocating national sales resources today, I would shift people and inventory toward Tasmania, South Australia, and Queensland (which shows 2025 momentum despite the 5-year decline). NSW resources should be right-sized to the current run rate, not historical peaks. The WA market warrants a lean, flexible approach given its extreme volatility &mdash; contractor-based coverage rather than permanent teams.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="report-footer">
+    <p><strong style="color: #c8d6e5;">Australian Building Approvals Analysis</strong></p>
+    <p>Built with T-SQL (SQL Server) | Data: ABS Cat. 8731.0</p>
+    <p style="margin-top: 0.5rem;">
+        <a href="https://github.com/Tommy-Nguyen-Stonera">GitHub</a> &middot;
+        <a href="https://tommy-nguyen-stonera.vercel.app">Portfolio</a>
+    </p>
+    <p style="margin-top: 1rem; color: #3a5a7a;">Tommy Nguyen &copy; 2025</p>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+    // Progress bar
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = (winScroll / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+
+    // Scroll-reveal for sections
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.section').forEach(function(section) {
+        observer.observe(section);
+    });
+
+    // Active sidebar link
+    var sidebarLinks = document.querySelectorAll('.sidebar a');
+    var sections = document.querySelectorAll('.section');
+
+    window.addEventListener('scroll', function() {
+        var current = '';
+        sections.forEach(function(section) {
+            var sectionTop = section.offsetTop - 200;
+            if (window.pageYOffset >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+        sidebarLinks.forEach(function(link) {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>
