@@ -3,500 +3,373 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Australian Building Approvals Analysis | Tommy Nguyen</title>
+<title>Building Materials &amp; Home Features: Impact on Property Values — Tommy Nguyen</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#1A3A6B;--gold:#E8A500;--light-blue:#F0F4FA;--light-gold:#FFD055;--cream:#FFFDF0;--dark:#252423;--code-bg:#1e2a3a;--code-text:#c9d1d9}
 body{font-family:'Segoe UI',Calibri,Arial,sans-serif;color:var(--dark);line-height:1.7;background:#fff}
-code,pre{font-family:'Cascadia Code','Consolas',monospace}
-#progress-bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--light-gold));z-index:1000;width:0%;transition:width 0.1s}
-#toc{position:fixed;right:24px;top:80px;width:220px;font-size:12px;z-index:99;background:#fff;border-left:2px solid var(--light-blue);padding:12px 0 12px 16px}
-#toc a{display:block;color:#666;text-decoration:none;padding:4px 0;border-right:3px solid transparent;transition:all 0.2s}
-#toc a:hover,#toc a.active{color:var(--navy);border-right-color:var(--gold);font-weight:600}
+code,pre,.code-block{font-family:'Cascadia Code','Consolas',monospace}
+#progress-bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--light-gold));width:0;z-index:9999;transition:width .15s}
+#toc{position:fixed;right:24px;top:80px;width:200px;font-size:12px;z-index:100}
+#toc ul{list-style:none;border-left:2px solid var(--light-blue)}
+#toc li{padding:4px 0 4px 14px;cursor:pointer;color:#666;transition:all .2s}
+#toc li:hover{color:var(--navy)}
+#toc li.active{color:var(--navy);font-weight:700;border-left:3px solid var(--gold);margin-left:-2px}
 @media(max-width:1100px){#toc{display:none}}
 .wrapper{max-width:820px;margin:0 auto;padding:40px 48px}
-@media(max-width:900px){.wrapper{padding:24px 16px}}
-.cover{background:var(--navy);position:relative;overflow:hidden;padding:80px 48px 64px}
-.cover::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");opacity:0.5}
-.cover::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 80%,rgba(232,165,0,0.15) 0%,transparent 60%)}
-.cover *{position:relative;z-index:1}
-.cover h1{font-size:32px;color:#fff;margin-bottom:8px}
-.cover h1::after{content:'';display:block;height:3px;background:var(--gold);margin-top:12px;animation:underline-grow 1.2s ease-out forwards;transform-origin:left}
-@keyframes underline-grow{from{width:0}to{width:100%}}
-.cover .subtitle{color:var(--gold);font-size:16px;margin-bottom:16px;font-weight:500}
-.cover .meta{color:rgba(255,255,255,0.6);font-size:13px}
-.stat-row{display:flex;gap:16px;flex-wrap:wrap;margin:32px 0}
-.stat{flex:1;min-width:140px;background:var(--light-blue);border-radius:8px;padding:20px 16px;text-align:center;border-top:3px solid var(--light-blue);transition:all 0.25s}
-.stat:hover{border-top-color:var(--gold);transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,0.08)}
+@media(max-width:860px){.wrapper{padding:24px 18px}}
+.cover{background:var(--navy);position:relative;overflow:hidden;padding:80px 48px 60px;text-align:center;color:#fff}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(232,165,0,.18),transparent 70%);z-index:1}
+.cover::after{content:'';position:absolute;inset:0;opacity:.12;background:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
+.cover>*{position:relative;z-index:2}
+.cover h1{font-size:32px;font-weight:800;margin-bottom:8px}
+.cover h1::after{content:'';display:block;margin:12px auto 0;height:3px;background:var(--gold);animation:underline-grow 1s ease-out forwards;width:0}
+@keyframes underline-grow{to{width:60%}}
+.cover .subtitle{color:var(--gold);font-size:16px;margin-bottom:4px}
+.cover .meta{color:rgba(255,255,255,.6);font-size:13px}
+.stat-row{display:flex;gap:16px;margin:32px 0;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:var(--light-blue);border-radius:8px;padding:18px;text-align:center;border-top:3px solid transparent;transition:all .25s}
+.stat:hover{border-top-color:var(--gold);transform:scale(1.04);box-shadow:0 4px 16px rgba(0,0,0,.1)}
 .stat .value{font-size:20pt;font-weight:700;color:var(--navy)}
-.stat .label{font-size:9pt;color:#888;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
-.guide-box{background:var(--light-blue);border:1px solid var(--navy);border-radius:8px;padding:24px 28px;margin:32px 0}
-.guide-box .guide-title{text-transform:uppercase;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:1px;margin-bottom:12px}
-.guide-box p{font-size:14px;color:#555;margin-bottom:8px}
+.stat .label{font-size:9pt;color:#888;margin-top:2px}
+.guide-box{background:var(--light-blue);border:2px solid var(--navy);border-radius:8px;padding:24px 28px;margin:32px 0}
+.guide-box h3{text-transform:uppercase;color:var(--navy);font-size:12px;letter-spacing:1.5px;margin-bottom:10px}
+.guide-box p,.guide-box li{font-size:14px;color:#444}
+.guide-box ul{padding-left:18px;margin-top:6px}
+.guide-box li{margin-bottom:4px}
 h2{font-size:16pt;font-weight:700;color:var(--navy);border-bottom:3px solid var(--gold);padding-bottom:8px;margin:48px 0 20px}
-.research-q{border:1px solid var(--navy);border-radius:8px;padding:20px 24px;margin:20px 0}
-.research-q .rq-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--navy);font-weight:700;margin-bottom:6px}
+.research-q{border:2px solid var(--navy);border-radius:8px;padding:18px 22px;margin:16px 0 20px;background:#fff}
+.research-q .rq-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--navy);font-weight:700;margin-bottom:4px}
 .research-q .rq-label::before{content:'? ';font-size:14px}
-.research-q .question{font-style:italic;font-size:15px;color:var(--dark);margin-bottom:8px}
-.sql-ref{display:inline-block;background:var(--navy);color:#fff;font-size:10px;padding:2px 10px;border-radius:12px;font-weight:600;letter-spacing:0.5px}
-p{margin:14px 0;font-size:15px}
-.code-block{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:20px 24px;margin:20px 0;overflow-x:auto;font-size:13px;line-height:1.6}
-.code-block .kw{color:#7ee787}.code-block .fn{color:#d2a8ff}.code-block .str{color:#a5d6ff}.code-block .cm{color:#8b949e;font-style:italic}.code-block .num{color:#79c0ff}
-.finding{background:var(--cream);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:20px 24px;margin:20px 0}
-.finding .finding-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);font-weight:700;margin-bottom:8px}
-.finding p{margin:6px 0;font-size:14px}
-.thinking{background:#f8f6f0;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:20px 24px;margin:20px 0}
-.thinking .thinking-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--navy);font-weight:700;margin-bottom:8px}
-.thinking p{margin:6px 0;font-size:14px;color:#444}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease,border-left-width 0.4s ease}
+.research-q .rq-text{font-style:italic;font-size:15px;color:var(--dark)}
+.code-ref{display:inline-block;background:var(--navy);color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;margin-top:8px;font-family:'Cascadia Code','Consolas',monospace}
+p{margin:12px 0;font-size:15px}
+.code-block{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:20px 24px;margin:16px 0;overflow-x:auto;font-size:13px;line-height:1.6}
+.code-block .kw{color:#ff7b72}.code-block .fn{color:#d2a8ff}.code-block .str{color:#a5d6ff}.code-block .cm{color:#8b949e;font-style:italic}.code-block .num{color:#79c0ff}
+.finding{background:var(--cream);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.finding .finding-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-weight:700;margin-bottom:6px}
+.finding p{margin:4px 0;font-size:14px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
-.finding.reveal{border-left-width:0px}.finding.reveal.visible{border-left-width:4px}
-.footer{text-align:center;padding:40px 0;color:#999;font-size:13px;border-top:1px solid #eee;margin-top:60px}
-.footer a{color:var(--navy);text-decoration:none}
-@media print{.reveal{opacity:1!important;transform:none!important;border-left-width:4px!important}#toc,#progress-bar{display:none!important}*{animation:none!important}}
+.finding.reveal.visible{border-left-width:4px;animation:border-grow .4s ease forwards}
+@keyframes border-grow{from{border-left-width:0}to{border-left-width:4px}}
+.footer{text-align:center;padding:48px 20px;color:#888;font-size:13px;border-top:1px solid #eee;margin-top:48px}
+.footer a{color:var(--navy)}
+@media print{#progress-bar,#toc{display:none}.reveal{opacity:1!important;transform:none!important}.cover{break-after:page}}
 </style>
 </head>
 <body>
 <div id="progress-bar"></div>
-<nav id="toc">
-<a href="#national">National Overview</a>
-<a href="#states">State Rankings</a>
-<a href="#nsw-compare">NSW vs Major States</a>
-<a href="#dwelling">Dwelling Types</a>
-<a href="#seasonal">Seasonal Patterns</a>
-<a href="#covid">COVID Impact</a>
-<a href="#rolling">Rolling Averages</a>
-<a href="#value">Value Trends</a>
-<a href="#growth">Growth States</a>
-</nav>
+
+<nav id="toc"><ul>
+<li data-section="overview">Overview</li>
+<li data-section="exterior">Exterior Cladding</li>
+<li data-section="quality">Overall Quality</li>
+<li data-section="kitchen">Kitchen Quality</li>
+<li data-section="foundation">Foundation Type</li>
+<li data-section="veneer">Masonry Veneer</li>
+<li data-section="correlation">Correlation Heatmap</li>
+<li data-section="surprises">Surprises &amp; Process</li>
+</ul></nav>
 
 <div class="cover">
-<h1>Australian Building Approvals Analysis</h1>
-<div class="subtitle">ABS Cat. 8731.0 &mdash; What Gets the Green Light</div>
-<div class="meta">Tommy Nguyen &bull; T-SQL &bull; Jan 2010 &ndash; Jan 2026 &bull; 9 Query Blocks</div>
+<h1>Building Materials &amp; Property Values</h1>
+<p class="subtitle">Which Finishes Actually Drive Home Prices?</p>
+<p class="meta">Tommy Nguyen &middot; Ames Housing Dataset &middot; 2,930 Properties &middot; 82 Features</p>
 </div>
 
 <div class="wrapper">
 
-<div class="stat-row">
-<div class="stat reveal"><div class="value">4,632</div><div class="label">Records</div></div>
-<div class="stat reveal"><div class="value">2010&ndash;2026</div><div class="label">Period (192 months)</div></div>
-<div class="stat reveal"><div class="value">3.1M</div><div class="label">Total Approvals</div></div>
-<div class="stat reveal"><div class="value">$1.97T</div><div class="label">Total Value</div></div>
+<div class="stat-row reveal">
+<div class="stat"><div class="value">r = 0.80</div><div class="label">Overall Quality vs Price</div></div>
+<div class="stat"><div class="value">$189K</div><div class="label">Excellent vs Avg Kitchen</div></div>
+<div class="stat"><div class="value">$102K</div><div class="label">Stone Veneer Premium</div></div>
+<div class="stat"><div class="value">2,930</div><div class="label">Properties Analysed</div></div>
 </div>
 
 <div class="guide-box">
-<div class="guide-title">How to Read This Report</div>
-<p>This report analyses 16 years of monthly building approval data from the ABS &mdash; the official record of every building project that gets the green light in Australia. Each section follows a chain of questions where findings from one query naturally lead to the next.</p>
-<p>This is the &ldquo;intent&rdquo; side of construction. An approval tells you what is planned; the Building Activity dataset (Cat. 8752.0) tells you what actually gets built. The gap between the two is where the real story lives.</p>
+<h3>How to Read This Report</h3>
+<p>After five years selling stone, tiles, and flooring across Sydney, I tested my industry instincts against hard data. This report analyses the Ames Housing dataset — 2,930 residential sales with 82 features covering everything from exterior cladding to kitchen quality.</p>
+<ul>
+<li><strong>Research Question</strong> boxes frame each business problem from a building materials perspective</li>
+<li><strong>Code blocks</strong> show the Pandas and Matplotlib approach used</li>
+<li><strong>Key Finding</strong> cards present the data-backed answer</li>
+<li>I have included honest reflections on where I got stuck and what surprised me</li>
+</ul>
 </div>
 
-<!-- SECTION 1 -->
-<h2 id="national">1. National Overview &mdash; Total Approvals and Value by Year</h2>
+<!-- Section 1 -->
+<h2 id="overview">Project Overview &amp; Motivation</h2>
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="question">How has construction activity changed over the last 16 years? Are we in a growth market or a declining one?</div>
-<span class="sql-ref">QUERY 1 &mdash; Annual Overview</span>
+<div class="rq-text">Do the materials and finishes I sell every day actually drive measurable differences in property value?</div>
+<span class="code-ref">analysis.py</span>
 </div>
 
-<p>Having worked in building materials sales across Sydney, Canberra, Newcastle, and Wollongong for over five years, I have spent a lot of time on the ground talking to builders, developers, and project managers. You develop a feel for the market after a while. You notice when quotes slow down, when certain regions go quiet, or when the phone starts ringing about apartment projects instead of house builds. But that is all intuition, and intuition is not something you can put in a sales forecast.</p>
+<p>Conversations with homeowners almost always circle back to the same question: "Will this actually increase what my home is worth?" I have answered that hundreds of times based on experience and industry knowledge, but I had never tested those instincts against hard data. This project let me do exactly that.</p>
 
-<div class="code-block"><span class="kw">WITH</span> YearlyTotals <span class="kw">AS</span> (
-    <span class="kw">SELECT</span>
-        <span class="fn">YEAR</span>(Period) <span class="kw">AS</span> ApprovalYear,
-        <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> TotalApprovals,
-        <span class="fn">ROUND</span>(<span class="fn">SUM</span>(ValueOfApprovals) / <span class="num">1000000</span>, <span class="num">1</span>) <span class="kw">AS</span> TotalValue_M
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">GROUP BY</span> <span class="fn">YEAR</span>(Period)
-),
-WithGrowth <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> ApprovalYear, TotalApprovals, TotalValue_M,
-        <span class="fn">LAG</span>(TotalApprovals) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> ApprovalYear) <span class="kw">AS</span> PrevYear
-    <span class="kw">FROM</span> YearlyTotals
-)
-<span class="kw">SELECT</span> ApprovalYear, TotalApprovals, TotalValue_M,
-    <span class="fn">ROUND</span>((TotalApprovals - PrevYear) * <span class="num">100.0</span>
-        / PrevYear, <span class="num">1</span>) <span class="kw">AS</span> Growth_Pct
-<span class="kw">FROM</span> WithGrowth
-<span class="kw">ORDER BY</span> ApprovalYear;</div>
+<p>The goal was not academic. I wanted something I could reference in real conversations with clients and contractors. When someone asks whether upgrading from vinyl siding to cement board is worth the cost, I want an answer backed by data, not just a hunch.</p>
+
+<div class="code-block">
+<span class="cm"># Load the Ames Housing dataset (tab-separated)</span><br>
+df = pd.<span class="fn">read_csv</span>(<span class="str">"ames_housing.tsv"</span>, sep=<span class="str">"\t"</span>)<br>
+<span class="fn">print</span>(<span class="str">f"Loaded {len(df)} properties, {df.shape[1]} columns"</span>)<br>
+<span class="cm"># 2930 rows, 82 columns</span><br>
+<span class="cm"># Sale price range: $12,789 - $755,000 (median $163,000)</span>
+</div>
 
 <div class="finding reveal">
-<div class="finding-label">Key Finding</div>
-<p>National approvals peaked at 239,735 in 2015 and have never returned to that level. The 2021 stimulus boom (228,995) came close but was followed by sharp declines. Meanwhile, total value hit a record <strong>$198.8B in 2025</strong> despite lower counts &mdash; the market is shifting to fewer, larger projects.</p>
+<div class="finding-label">Where I Got Stuck Early</div>
+<p>My first attempt used <code>pd.read_csv()</code> without specifying <code>sep="\t"</code> — the file was tab-separated, not comma-separated. Pandas silently loaded the entire row as a single column instead of throwing an error. I had a DataFrame with 2,930 rows and 1 column, and it took me embarrassingly long to realise what happened. The fix was trivial (<code>sep="\t"</code>), but it is a reminder that Pandas will happily give me a "valid" result that is completely wrong. I always check <code>df.shape</code> and <code>df.head()</code> immediately after loading.</p>
 </div>
 
-<div class="thinking">
-<div class="thinking-label">What I Expected vs What I Found</div>
-<p>I expected approval counts and values to move together. They do not. Since 2022, approval counts have been flat around 164,000-191,000 per year, but total value has climbed from $153.8B to $198.8B. This tells you the market is restructuring toward fewer but more expensive projects &mdash; think large apartment developments and commercial builds rather than suburban house-and-land packages. The average value per approval more than doubled from $439,360 in 2010 to $1,017,764 in 2025.</p>
-</div>
-
-<!-- SECTION 2 -->
-<h2 id="states">2. State Rankings &mdash; Market Share</h2>
+<!-- Section 2 -->
+<h2 id="exterior">Exterior Cladding Material vs Sale Price</h2>
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="question">Which states drive the most construction? How concentrated is the national market?</div>
-<span class="sql-ref">QUERY 2 &mdash; State Comparison</span>
+<div class="rq-text">Which exterior cladding materials are associated with the highest property values? If a homeowner chooses between vinyl, brick, or cement board, what does the data say?</div>
+<span class="code-ref">analysis.py — Chart 1</span>
 </div>
 
-<div class="code-block"><span class="kw">WITH</span> StateTotals <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> State,
-        <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> TotalApprovals,
-        <span class="fn">ROUND</span>(<span class="fn">SUM</span>(ValueOfApprovals) / <span class="num">1000000</span>, <span class="num">1</span>)
-            <span class="kw">AS</span> TotalValue_M
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">GROUP BY</span> State
-),
-GrandTotal <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> <span class="fn">SUM</span>(TotalApprovals) <span class="kw">AS</span> NationalApprovals
-    <span class="kw">FROM</span> StateTotals
-)
-<span class="kw">SELECT</span> s.State,
-    <span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> s.TotalApprovals <span class="kw">DESC</span>)
-        <span class="kw">AS</span> Rank,
-    <span class="fn">ROUND</span>(s.TotalApprovals * <span class="num">100.0</span>
-        / g.NationalApprovals, <span class="num">1</span>) <span class="kw">AS</span> Share_Pct
-<span class="kw">FROM</span> StateTotals s
-<span class="kw">CROSS JOIN</span> GrandTotal g
-<span class="kw">ORDER BY</span> s.TotalApprovals <span class="kw">DESC</span>;</div>
+<div class="code-block">
+<span class="cm"># Group rare materials (&lt;30 obs) to keep chart readable</span><br>
+ext_counts = df[<span class="str">"Exterior 1st"</span>].<span class="fn">value_counts</span>()<br>
+common_ext = ext_counts[ext_counts >= <span class="num">30</span>].index<br>
+df[<span class="str">"Exterior_Clean"</span>] = df[<span class="str">"Exterior 1st"</span>].<span class="fn">where</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;df[<span class="str">"Exterior 1st"</span>].<span class="fn">isin</span>(common_ext), <span class="str">"Other"</span>)<br><br>
+<span class="cm"># Order by median sale price</span><br>
+ext_order = df.<span class="fn">groupby</span>(<span class="str">"Exterior_Clean"</span>)[<span class="str">"SalePrice"</span>].<span class="fn">median</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>).index<br>
+sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Exterior_Clean"</span>, y=<span class="str">"SalePrice"</span>, order=ext_order)
+</div>
+
+<p>I initially plotted all exterior materials separately, but some (like stone and asbestos shingle) had fewer than 10 observations. The box plots for those materials were visually dramatic but statistically meaningless — one outlier could swing the median by $50K. I set a threshold of 30 observations and grouped everything below that into "Other." This is a trade-off: I lose the ability to comment on rare materials, but I gain confidence that the patterns I report are real.</p>
+
+<div class="stat-row reveal">
+<div class="stat"><div class="value">$238K</div><div class="label">Cement Board (Top)</div></div>
+<div class="stat"><div class="value">$203K</div><div class="label">Vinyl Siding</div></div>
+<div class="stat"><div class="value">$135K</div><div class="label">Metal Siding (Bottom)</div></div>
+</div>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Victoria leads with 31.1% of all approvals (971,368), followed by NSW at 27.6% (863,712). Together, the top four states (VIC, NSW, QLD, WA) account for <strong>89.4% of all national approvals</strong>. The NT contributes just 0.6% &mdash; essentially a rounding error at the national level.</p>
-</div>
-
-<div class="thinking">
-<div class="thinking-label">What I Expected vs What I Found</div>
-<p>I noticed early that comparing raw approval counts across states is misleading without adjusting for state population. NSW and VIC look close in absolute terms, but on a per-capita basis, VIC's lead widens significantly. I chose to present absolute numbers because that is what matters for a supplier sizing a market, but the per-capita view tells a different story about building intensity.</p>
-</div>
-
-<!-- SECTION 3 -->
-<h2 id="nsw-compare">3. NSW vs Other Major States</h2>
-
-<div class="research-q">
-<div class="rq-label">Research Question</div>
-<div class="question">How does NSW compare to VIC, QLD, and WA over time? As someone who has worked across NSW for 5+ years, how does my home state perform relative to the competition?</div>
-<span class="sql-ref">QUERY 3 &mdash; State Head-to-Head</span>
-</div>
-
-<div class="code-block"><span class="kw">SELECT</span>
-    <span class="fn">YEAR</span>(Period) <span class="kw">AS</span> ApprovalYear,
-    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> State = <span class="str">'New South Wales'</span>
-        <span class="kw">THEN</span> NumberOfApprovals <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> NSW,
-    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> State = <span class="str">'Victoria'</span>
-        <span class="kw">THEN</span> NumberOfApprovals <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> VIC,
-    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> State = <span class="str">'Queensland'</span>
-        <span class="kw">THEN</span> NumberOfApprovals <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> QLD,
-    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> State = <span class="str">'Western Australia'</span>
-        <span class="kw">THEN</span> NumberOfApprovals <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> WA
-<span class="kw">FROM</span> BuildingApprovals
-<span class="kw">GROUP BY</span> <span class="fn">YEAR</span>(Period)
-<span class="kw">ORDER BY</span> ApprovalYear;</div>
-
-<div class="finding reveal">
-<div class="finding-label">Key Finding</div>
-<p>NSW peaked at 74,699 approvals in 2016. By 2024, it was down to 44,185 &mdash; just <strong>59.2% of its peak (a 40.8% decline)</strong>. NSW only led VIC in 3 out of 16 years (2015-2017), driven by the Sydney apartment boom. Since 2018, VIC has pulled ahead and the gap is widening.</p>
-</div>
-
-<div class="thinking">
-<div class="thinking-label">The Hardest Finding to See in Black and White</div>
-<p>As someone who works in NSW, this was the hardest finding. Working in Sydney, you feel like you are in the centre of everything. The data says otherwise. Victoria has been the dominant construction market for most of the last 16 years, and the gap has been widening since 2018. I had to sit with this one for a while before writing it up.</p>
-</div>
-
-<!-- SECTION 4 -->
-<h2 id="dwelling">4. Dwelling Type Breakdown</h2>
-
-<div class="research-q">
-<div class="rq-label">Research Question</div>
-<div class="question">What types of buildings are being approved? Has the mix between houses and higher-density dwellings shifted over time?</div>
-<span class="sql-ref">QUERY 4 &mdash; Dwelling Mix</span>
-</div>
-
-<div class="code-block"><span class="kw">WITH</span> DwellingTrend <span class="kw">AS</span> (
-    <span class="kw">SELECT</span>
-        <span class="fn">YEAR</span>(Period) <span class="kw">AS</span> ApprovalYear,
-        DwellingType,
-        <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> TypeApprovals
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">WHERE</span> Sector = <span class="str">'Private'</span>
-    <span class="kw">GROUP BY</span> <span class="fn">YEAR</span>(Period), DwellingType
-),
-YearTotal <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> ApprovalYear,
-        <span class="fn">SUM</span>(TypeApprovals) <span class="kw">AS</span> YearApprovals
-    <span class="kw">FROM</span> DwellingTrend
-    <span class="kw">GROUP BY</span> ApprovalYear
-)
-<span class="kw">SELECT</span> d.ApprovalYear, d.DwellingType,
-    d.TypeApprovals,
-    <span class="fn">ROUND</span>(d.TypeApprovals * <span class="num">100.0</span>
-        / y.YearApprovals, <span class="num">1</span>) <span class="kw">AS</span> Share_Pct
-<span class="kw">FROM</span> DwellingTrend d
-<span class="kw">JOIN</span> YearTotal y
-    <span class="kw">ON</span> d.ApprovalYear = y.ApprovalYear
-<span class="kw">ORDER BY</span> d.ApprovalYear, d.TypeApprovals <span class="kw">DESC</span>;</div>
-
-<div class="finding reveal">
-<div class="finding-label">Key Finding</div>
-<p>The dwelling mix tells a story about urban densification. Houses and apartments require fundamentally different materials &mdash; concrete vs timber framing, bulk supplies vs precision finishing &mdash; so shifts in the mix directly affect what a building materials supplier should stock.</p>
-</div>
-
-<div class="thinking">
-<div class="thinking-label">Questions That Arose From the Data</div>
-<p>What I could not tell from the approval count alone was whether VIC's lead was driven by houses or apartments. If VIC is primarily approving detached houses in greenfield suburbs while NSW is approving apartment towers, the material demand profiles are completely different even though the headline approval numbers are similar. This question became important when I looked at the value data in Query 8.</p>
-</div>
-
-<!-- SECTION 5 -->
-<h2 id="seasonal">5. Seasonal Patterns &mdash; Monthly PIVOT</h2>
-
-<div class="research-q">
-<div class="rq-label">Research Question</div>
-<div class="question">Do building approvals follow a predictable seasonal pattern? If so, which months are strongest and weakest?</div>
-<span class="sql-ref">QUERY 5 &mdash; Monthly PIVOT</span>
-</div>
-
-<p>Anyone in construction sales knows that January is dead. But I wanted to quantify it &mdash; exactly how much of a drop-off is there, and which months should you be ramping up inventory for?</p>
-
-<div class="code-block"><span class="kw">SELECT</span> PivotYear,
-    <span class="fn">ISNULL</span>([<span class="num">1</span>],<span class="num">0</span>) <span class="kw">AS</span> Jan,
-    <span class="fn">ISNULL</span>([<span class="num">2</span>],<span class="num">0</span>) <span class="kw">AS</span> Feb,
-    <span class="fn">ISNULL</span>([<span class="num">3</span>],<span class="num">0</span>) <span class="kw">AS</span> Mar,
-    <span class="cm">-- ... Apr through Dec ...</span>
-    <span class="fn">ISNULL</span>([<span class="num">11</span>],<span class="num">0</span>) <span class="kw">AS</span> Nov,
-    <span class="fn">ISNULL</span>([<span class="num">12</span>],<span class="num">0</span>) <span class="kw">AS</span> Dec
-<span class="kw">FROM</span> (
-    <span class="kw">SELECT</span> <span class="fn">YEAR</span>(Period) <span class="kw">AS</span> PivotYear,
-        <span class="fn">MONTH</span>(Period) <span class="kw">AS</span> PivotMonth,
-        NumberOfApprovals
-    <span class="kw">FROM</span> BuildingApprovals
-) <span class="kw">AS</span> SourceData
-<span class="kw">PIVOT</span> (
-    <span class="fn">SUM</span>(NumberOfApprovals)
-    <span class="kw">FOR</span> PivotMonth <span class="kw">IN</span> ([<span class="num">1</span>],[<span class="num">2</span>],[<span class="num">3</span>],[<span class="num">4</span>],[<span class="num">5</span>],[<span class="num">6</span>],
-        [<span class="num">7</span>],[<span class="num">8</span>],[<span class="num">9</span>],[<span class="num">10</span>],[<span class="num">11</span>],[<span class="num">12</span>])
-) <span class="kw">AS</span> PivotTable
-<span class="kw">ORDER BY</span> PivotYear;</div>
-
-<div class="finding reveal">
-<div class="finding-label">Key Finding</div>
-<p>January averages just 1,563 approvals per state &mdash; <strong>27.8% below the November peak of 2,164</strong>. May (2,161) and October (2,157) are also strong months. The pattern aligns with the construction calendar: councils process backlogs before Christmas, January is holiday shutdown, and activity ramps from February onwards.</p>
+<p>Cement board (fibre cement) tops the list at $238K median — $35K above vinyl siding and $103K above metal siding. It is durable, fire-resistant, low-maintenance, and increasingly specified by architects. In Australia, brands like James Hardie dominate and the product carries a premium perception that clearly translates to sale price.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">Business Implication</div>
-<p>For a supplier, this means you should be building inventory in Oct-Nov for the Feb-May rush. The obvious follow-up is whether this pattern varies by state or dwelling type. A January slump in Sydney might look very different from January in Queensland, where the weather does not shut down construction the same way.</p>
+<p>The $35K gap between cement board and vinyl gives a concrete answer to the upgrade question. The material cost difference is a fraction of that gap. For any homeowner weighing the upgrade, the data supports going premium on exterior cladding — it is one of the more accessible ways to associate a property with higher value.</p>
 </div>
 
-<!-- SECTION 6 -->
-<h2 id="covid">6. COVID-19 Impact Analysis</h2>
+<!-- Section 3 -->
+<h2 id="quality">Overall Quality Rating &amp; Price</h2>
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="question">How did COVID-19 impact building approvals? What does the data say versus what I experienced on the ground?</div>
-<span class="sql-ref">QUERY 6 &mdash; COVID Period Comparison</span>
+<div class="rq-text">How much does overall build quality actually matter? Is the relationship linear, or do the top tiers command a disproportionate premium?</div>
+<span class="code-ref">analysis.py — Chart 2</span>
 </div>
 
-<p>This was a period I lived through on the ground. Builders were panicking in March 2020, then suddenly the phone would not stop ringing six months later. I wanted to see the data behind what I experienced.</p>
+<div class="code-block">
+sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Overall Qual"</span>, y=<span class="str">"SalePrice"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hue=<span class="str">"Overall Qual"</span>, palette=<span class="str">"YlOrRd"</span>)<br><br>
+<span class="cm"># Median price per quality level</span><br>
+qual_med = df.<span class="fn">groupby</span>(<span class="str">"Overall Qual"</span>)[<span class="str">"SalePrice"</span>].<span class="fn">median</span>()<br>
+<span class="cm"># Quality 5 to 7: +$67,000</span><br>
+<span class="cm"># Quality 7 to 9: +$160,000 — it accelerates!</span>
+</div>
 
-<div class="code-block"><span class="kw">WITH</span> PeriodClassified <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> *,
-        <span class="kw">CASE</span>
-            <span class="kw">WHEN</span> Period &lt; <span class="str">'2020-03-01'</span>
-                <span class="kw">THEN</span> <span class="str">'Pre-COVID (2018-2019)'</span>
-            <span class="kw">WHEN</span> Period <span class="kw">BETWEEN</span> <span class="str">'2020-03-01'</span>
-                <span class="kw">AND</span> <span class="str">'2020-12-31'</span>
-                <span class="kw">THEN</span> <span class="str">'COVID Impact'</span>
-            <span class="kw">WHEN</span> Period <span class="kw">BETWEEN</span> <span class="str">'2021-01-01'</span>
-                <span class="kw">AND</span> <span class="str">'2021-12-31'</span>
-                <span class="kw">THEN</span> <span class="str">'Recovery (2021)'</span>
-            <span class="kw">WHEN</span> Period &gt;= <span class="str">'2022-01-01'</span>
-                <span class="kw">THEN</span> <span class="str">'Post-Recovery (2022+)'</span>
-        <span class="kw">END AS</span> CovidPeriod
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">WHERE</span> Period &gt;= <span class="str">'2018-01-01'</span>
-)
-<span class="kw">SELECT</span> CovidPeriod,
-    <span class="fn">ROUND</span>(<span class="fn">AVG</span>(<span class="fn">CAST</span>(NumberOfApprovals <span class="kw">AS FLOAT</span>)), <span class="num">0</span>)
-        <span class="kw">AS</span> AvgMonthlyApprovals
-<span class="kw">FROM</span> PeriodClassified
-<span class="kw">GROUP BY</span> CovidPeriod;</div>
+<p>Each quality point adds roughly $40,000 to median sale price, but the relationship is not linear — it accelerates at the top end. Quality 5 to 7 adds $67K, but quality 7 to 9 adds $160K. That acceleration is the most important finding in this entire analysis.</p>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>The COVID disruption was surprisingly short. Average monthly approvals during the COVID impact period (15,994) were <strong>virtually identical to pre-COVID levels (15,984)</strong>. The real story is the 2021 recovery: monthly averages jumped to 19,083 (+19.4% above pre-COVID), driven by HomeBuilder grants and record-low interest rates. But post-recovery (2022+) settled back to 15,115/month &mdash; slightly below pre-COVID baseline.</p>
+<p>Overall quality has the strongest correlation with sale price in the entire dataset (r = 0.80). The jump from "good" to "excellent" is worth more than double the jump from "below average" to "good." For anyone specifying finishes, this is the argument for going premium on details that drive quality perception: cabinetry, trim, hardware, stone benchtops.</p>
 </div>
 
-<div class="thinking">
-<div class="thinking-label">What I Expected vs What I Found</div>
-<p>National approvals jumped from 176,611 in 2019 to 228,995 in 2021, a 29.7% increase. But the hangover was brutal: approvals crashed back to 164,332 by 2023 (-28.2% from the 2021 peak). The stimulus boom was real but temporary. What surprised me most is that the COVID impact period average was almost identical to pre-COVID &mdash; meaning the disruption was far shorter than it felt when you were living through it.</p>
+<div class="finding reveal">
+<div class="finding-label">What I Expected vs What I Found</div>
+<p>I assumed diminishing returns at the top end — that going from quality 8 to 9 would add less than going from 5 to 6. The opposite is true. Premium finishes compound in value. The market pays disproportionately more for excellence — which challenges the conventional wisdom I hear from builders every week: "Don't over-capitalise." The data suggests what builders call over-capitalisation is not over-capitalisation at all, at least at the premium end.</p>
 </div>
 
-<!-- SECTION 7 -->
-<h2 id="rolling">7. Rolling 12-Month Averages by State</h2>
+<!-- Section 4 -->
+<h2 id="kitchen">Kitchen Quality Premium</h2>
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="question">What does the underlying trend look like for each major state when you smooth out the monthly noise?</div>
-<span class="sql-ref">QUERY 7 &mdash; Trend Smoothing</span>
+<div class="rq-text">What is the real dollar premium for an excellent kitchen vs an average one? Kitchens are where homeowners spend the most on stone benchtops — does the data support that investment?</div>
+<span class="code-ref">analysis.py — Chart 3</span>
 </div>
 
-<div class="thinking">
-<div class="thinking-label">Where I Got Stuck</div>
-<p>Monthly data is noisy. I needed a way to see the actual direction each state was heading without getting distracted by one-off spikes and seasonal dips. I used a 12-month rolling window (ROWS BETWEEN 11 PRECEDING AND CURRENT ROW) to strip out seasonal effects. The first attempt used a 3-month window, which was still too noisy. I tried 6-month, which was better but still showed false signals. The 12-month window finally gave clean trend lines that matched what I knew from the ground.</p>
+<div class="code-block">
+<span class="cm"># Map quality grades to readable labels</span><br>
+kq_labels = {<span class="str">"Po"</span>: <span class="str">"Poor"</span>, <span class="str">"Fa"</span>: <span class="str">"Fair"</span>, <span class="str">"TA"</span>: <span class="str">"Average"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Gd"</span>: <span class="str">"Good"</span>, <span class="str">"Ex"</span>: <span class="str">"Excellent"</span>}<br>
+df[<span class="str">"Kitchen_Label"</span>] = df[<span class="str">"Kitchen Qual"</span>].<span class="fn">map</span>(kq_labels)<br><br>
+<span class="cm"># Dual panel: box plots + median bars</span><br>
+fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">14</span>, <span class="num">6</span>))<br>
+sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Kitchen_Label"</span>, y=<span class="str">"SalePrice"</span>, ax=axes[<span class="num">0</span>])<br>
+kq_medians = df.<span class="fn">groupby</span>(<span class="str">"Kitchen_Label"</span>)[<span class="str">"SalePrice"</span>].<span class="fn">median</span>()<br>
+axes[<span class="num">1</span>].<span class="fn">bar</span>(kq_medians.index, kq_medians.values)
 </div>
 
-<div class="code-block"><span class="kw">WITH</span> MonthlyByState <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> Period, State,
-        <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> MonthlyApprovals
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">GROUP BY</span> Period, State
-)
-<span class="kw">SELECT</span> Period, State, MonthlyApprovals,
-    <span class="fn">ROUND</span>(<span class="fn">AVG</span>(
-        <span class="fn">CAST</span>(MonthlyApprovals <span class="kw">AS FLOAT</span>)
-    ) <span class="kw">OVER</span> (
-        <span class="kw">PARTITION BY</span> State
-        <span class="kw">ORDER BY</span> Period
-        <span class="kw">ROWS BETWEEN</span> <span class="num">11</span> <span class="kw">PRECEDING
-        AND CURRENT ROW</span>
-    ), <span class="num">0</span>) <span class="kw">AS</span> Rolling12M_Avg
-<span class="kw">FROM</span> MonthlyByState
-<span class="kw">WHERE</span> State <span class="kw">IN</span> (
-    <span class="str">'New South Wales'</span>,
-    <span class="str">'Victoria'</span>,
-    <span class="str">'Queensland'</span>,
-    <span class="str">'Western Australia'</span>)
-<span class="kw">ORDER BY</span> State, Period;</div>
+<p>An excellent kitchen commands a $189,000 premium over an average kitchen. Even the step from Average to Good adds roughly $50K in median value. Kitchens are not the place to cut corners.</p>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>VIC's rolling average peaked in mid-2017 and has been on a gradual downtrend since. NSW shows a sharper decline from its 2016 peak. <strong>QLD's rolling average bottomed in mid-2019 and has been climbing steadily</strong> &mdash; it is the only major state with a clearly positive trajectory heading into 2025. QLD is the state to watch for the next five years, likely boosted by 2032 Brisbane Olympics infrastructure.</p>
+<p>Excellent kitchen: $189K premium over Average. This validates the investment in quality kitchen finishes — stone benchtops, quality cabinetry, good hardware. The data shows buyers reward kitchen quality heavily. Kitchen quality (r = 0.67) outweighs every individual exterior material comparison.</p>
 </div>
 
-<!-- SECTION 8 -->
-<h2 id="value">8. Value Trends &mdash; Where the Money Goes</h2>
+<div class="finding reveal">
+<div class="finding-label">The Pivot Moment</div>
+<p>I started this analysis expecting exterior cladding to be the strongest material-related predictor — because that is what I sell. But kitchen quality beats every individual exterior material comparison. The interior finish quality drives more value than the facade. This shifted my entire framing: I went from "which material matters most?" to "how well should I build, regardless of material?" The quality of execution matters more than the specific product. From my years in building materials, this resonates — the best tile installation with mid-range tiles looks better than a poor installation with premium tiles.</p>
+</div>
+
+<!-- Section 5 -->
+<h2 id="foundation">Foundation Type Analysis</h2>
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="question">Where is the money going? Count of approvals tells you about volume, but value tells you about the size and economic weight of projects.</div>
-<span class="sql-ref">QUERY 8 &mdash; Value per Approval</span>
+<div class="rq-text">Does foundation type predict sale price? Poured concrete vs cinder block — is there a measurable difference?</div>
+<span class="code-ref">analysis.py — Chart 4</span>
 </div>
 
-<div class="code-block"><span class="kw">SELECT</span>
-    <span class="fn">YEAR</span>(Period) <span class="kw">AS</span> ApprovalYear,
-    <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> TotalApprovals,
-    <span class="fn">ROUND</span>(<span class="fn">SUM</span>(ValueOfApprovals) / <span class="num">1000000000</span>, <span class="num">2</span>)
-        <span class="kw">AS</span> TotalValue_B,
-    <span class="kw">CASE WHEN</span> <span class="fn">SUM</span>(NumberOfApprovals) &gt; <span class="num">0</span>
-        <span class="kw">THEN</span> <span class="fn">ROUND</span>(<span class="fn">SUM</span>(ValueOfApprovals) * <span class="num">1.0</span>
-            / <span class="fn">SUM</span>(NumberOfApprovals), <span class="num">0</span>)
-        <span class="kw">ELSE NULL END AS</span> AvgValuePerApproval
-<span class="kw">FROM</span> BuildingApprovals
-<span class="kw">GROUP BY</span> <span class="fn">YEAR</span>(Period)
-<span class="kw">ORDER BY</span> ApprovalYear;</div>
+<div class="code-block">
+<span class="cm"># Bar chart with median + 95% CI</span><br>
+sns.<span class="fn">barplot</span>(data=df, x=<span class="str">"Foundation"</span>, y=<span class="str">"SalePrice"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;order=found_order, estimator=<span class="str">"median"</span>, errorbar=(<span class="str">"ci"</span>, <span class="num">95</span>))<br><br>
+<span class="cm"># Readable labels</span><br>
+foundation_labels = {<span class="str">"PConc"</span>: <span class="str">"Poured\nConcrete"</span>, <span class="str">"CBlock"</span>: <span class="str">"Cinder\nBlock"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"BrkTil"</span>: <span class="str">"Brick &amp;\nTile"</span>, <span class="str">"Slab"</span>: <span class="str">"Slab"</span>}
+</div>
+
+<p>Poured concrete foundations lead at $208,400 median — about $43K above cinder block ($165K). But this is less about the foundation itself and more about what it signals. Poured concrete is more expensive to construct, so it appears in higher-spec builds.</p>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>The average approval value more than doubled from $439,360 in 2010 to $1,017,764 in 2025 &mdash; a <strong>131.7% increase</strong>. Total approval value hit $198.8B in 2025, the highest year on record, despite approval counts being well below the 2015 peak. The industry is approving fewer but significantly more expensive projects.</p>
+<p>Poured concrete foundation: $208K median, $43K above cinder block. However, this is a textbook confounding variable — the premium likely reflects overall build quality rather than buyers specifically valuing the foundation material.</p>
 </div>
 
-<div class="thinking">
-<div class="thinking-label">The Most Surprising Finding</div>
-<p>I expected that when approval numbers dropped, the total value would drop too. Instead, 2025 set a record for total approval value despite being 18.5% below the approval count peak. This means the construction industry is not shrinking &mdash; it is restructuring toward higher-value projects. For someone selling building materials, this is actually good news: fewer projects, but each one is worth significantly more. Larger individual orders even if the number of customers shrinks.</p>
+<div class="finding reveal">
+<div class="finding-label">Where I Got Stuck</div>
+<p>This finding made me cautious about every other comparison. If foundation type is really just a proxy for overall build quality, then how many of my other material comparisons are also proxies? The correlation heatmap was partly motivated by this question — I wanted to see which features had independent predictive power versus which were just riding along with overall quality. From my years in building materials, I know that foundation choices are made by builders, not homeowners — they are a build-quality signal, not a consumer preference signal. That distinction matters for how I interpret every chart in this report.</p>
 </div>
 
-<!-- SECTION 9 -->
-<h2 id="growth">9. Top Growth States &mdash; 2020-2024 vs 2015-2019</h2>
+<!-- Section 6 -->
+<h2 id="veneer">Masonry Veneer Type</h2>
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="question">Which states are accelerating and which are losing momentum? If I were advising a building materials company on where to expand, which states would I pick?</div>
-<span class="sql-ref">QUERY 9 &mdash; Period Comparison</span>
+<div class="rq-text">How much value does masonry veneer add over no veneer? Stone and brick face are products I sell regularly — this has direct commercial relevance.</div>
+<span class="code-ref">analysis.py — Chart 5</span>
 </div>
 
-<div class="code-block"><span class="kw">WITH</span> RecentPeriod <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> State,
-        <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> RecentApprovals
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">WHERE</span> <span class="fn">YEAR</span>(Period) <span class="kw">BETWEEN</span> <span class="num">2020</span> <span class="kw">AND</span> <span class="num">2024</span>
-    <span class="kw">GROUP BY</span> State
-),
-PriorPeriod <span class="kw">AS</span> (
-    <span class="kw">SELECT</span> State,
-        <span class="fn">SUM</span>(NumberOfApprovals) <span class="kw">AS</span> PriorApprovals
-    <span class="kw">FROM</span> BuildingApprovals
-    <span class="kw">WHERE</span> <span class="fn">YEAR</span>(Period) <span class="kw">BETWEEN</span> <span class="num">2015</span> <span class="kw">AND</span> <span class="num">2019</span>
-    <span class="kw">GROUP BY</span> State
-)
-<span class="kw">SELECT</span> r.State, p.PriorApprovals,
-    r.RecentApprovals,
-    <span class="fn">ROUND</span>((r.RecentApprovals - p.PriorApprovals)
-        * <span class="num">100.0</span> / <span class="fn">NULLIF</span>(p.PriorApprovals, <span class="num">0</span>), <span class="num">1</span>)
-        <span class="kw">AS</span> Growth_Pct
-<span class="kw">FROM</span> RecentPeriod r
-<span class="kw">JOIN</span> PriorPeriod p <span class="kw">ON</span> r.State = p.State
-<span class="kw">ORDER BY</span> Growth_Pct <span class="kw">DESC</span>;</div>
+<div class="code-block">
+<span class="cm"># Fill NaN veneer type as "None"</span><br>
+df[<span class="str">"Mas Vnr Type"</span>] = df[<span class="str">"Mas Vnr Type"</span>].<span class="fn">fillna</span>(<span class="str">"None"</span>)<br>
+vnr_order = df.<span class="fn">groupby</span>(<span class="str">"Mas Vnr Type"</span>)[<span class="str">"SalePrice"</span>].<span class="fn">median</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>).index<br>
+sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Mas Vnr Type"</span>, y=<span class="str">"SalePrice"</span>, order=vnr_order)
+</div>
+
+<p>This is one of the most commercially relevant findings. Stone veneer sits at $245,000 median versus no veneer at $143,000 — a $102K difference. Brick face veneer also commands a premium at $205K median.</p>
+
+<div class="stat-row reveal">
+<div class="stat"><div class="value">$245K</div><div class="label">Stone Veneer Median</div></div>
+<div class="stat"><div class="value">$205K</div><div class="label">Brick Face Median</div></div>
+<div class="stat"><div class="value">$143K</div><div class="label">No Veneer Median</div></div>
+</div>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Only <strong>Tasmania (+16.2%) and South Australia (+6.8%)</strong> grew between the two periods. Every other state declined. NSW had the worst absolute decline (-76,678 fewer approvals, -22.9%). The NT fell -42.0%, reflecting the end of mining-driven construction.</p>
+<p>Stone veneer is associated with $102K more in median price than no veneer. The material and installation cost is a fraction of that differential, making it one of the highest-ROI exterior improvements a homeowner can consider. Masonry veneer area also correlates at r = 0.51 — the sheer amount of stone on a property has moderate independent predictive power.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">Business Implication</div>
-<p>WA's boom-bust is the most extreme: peaked at 33,088 in 2014, collapsed to 14,023 by 2023 (-57.6%), then partially recovered to 24,055 in 2025. For anyone selling into the WA market, the lesson is clear: do not staff or stock based on peak demand. If I were allocating a national sales team, I would be shifting resources from NSW toward TAS, SA, and QLD.</p>
+<p>Stone veneer is a product I sell, and this gives me a data point for client conversations. Obviously correlation is not causation — homes with stone veneer tend to be higher-spec builds overall. But the association is strong, and the practical reality is that stone veneer is one of the more accessible exterior upgrades. I would now reference this in sales conversations: "Data from 2,930 property sales shows a $102K median price association with stone veneer."</p>
 </div>
 
-<div class="thinking">
-<div class="thinking-label">Self-Critique and What I Would Do Next</div>
-<p>The obvious follow-up is why Tasmania and SA bucked the national trend. Tasmania's growth coincided with strong interstate migration and relative housing affordability &mdash; whether that is cause or coincidence would require linking this data with population and price data. I would also want to compare this approvals dataset with the Building Activity data (Cat. 8752.0) to quantify the approval-to-commencement conversion rate. An approval is a piece of paper; a commencement is a slab being poured. The gap between those two events is where the real story lives.</p>
+<!-- Section 7 -->
+<h2 id="correlation">Feature Correlation Heatmap</h2>
+
+<div class="research-q">
+<div class="rq-label">Research Question</div>
+<div class="rq-text">Which material and quality features have the strongest overall correlation with price? Beyond individual comparisons, what does the big picture look like?</div>
+<span class="code-ref">analysis.py — Chart 6</span>
+</div>
+
+<div class="code-block">
+<span class="cm"># Convert quality grades to numeric</span><br>
+qual_map = {<span class="str">"Po"</span>: <span class="num">1</span>, <span class="str">"Fa"</span>: <span class="num">2</span>, <span class="str">"TA"</span>: <span class="num">3</span>, <span class="str">"Gd"</span>: <span class="num">4</span>, <span class="str">"Ex"</span>: <span class="num">5</span>}<br>
+df[<span class="str">"Kitchen_Num"</span>] = df[<span class="str">"Kitchen Qual"</span>].<span class="fn">map</span>(qual_map)<br>
+df[<span class="str">"Exter_Num"</span>] = df[<span class="str">"Exter Qual"</span>].<span class="fn">map</span>(qual_map)<br><br>
+<span class="cm"># Build correlation matrix with Sale Price</span><br>
+corr_df = df[corr_cols].<span class="fn">rename</span>(columns=col_labels)<br>
+corr_matrix = corr_df.<span class="fn">corr</span>(numeric_only=<span class="kw">True</span>)<br>
+price_corr = corr_matrix[[<span class="str">"Sale Price"</span>]].<span class="fn">drop</span>(<span class="str">"Sale Price"</span>)<br>
+sns.<span class="fn">heatmap</span>(price_corr, annot=<span class="kw">True</span>, fmt=<span class="str">".2f"</span>, cmap=<span class="str">"YlOrRd"</span>)
+</div>
+
+<p>This became the most important chart because it answered a question I had not originally planned to ask: what matters most, full stop?</p>
+
+<div class="stat-row reveal">
+<div class="stat"><div class="value">r = 0.80</div><div class="label">Overall Quality</div></div>
+<div class="stat"><div class="value">r = 0.71</div><div class="label">Living Area</div></div>
+<div class="stat"><div class="value">r = 0.70</div><div class="label">Exterior Quality</div></div>
+<div class="stat"><div class="value">r = 0.67</div><div class="label">Kitchen Quality</div></div>
+</div>
+
+<div class="finding reveal">
+<div class="finding-label">Key Finding</div>
+<p>Quality ratings consistently outperform raw square footage in predicting price. The top five correlates include four quality measures and only one area measure. <strong>How I build matters as much as how big I build.</strong> Overall Quality dominates at r = 0.80 — nothing else comes close.</p>
+</div>
+
+<div class="finding reveal">
+<div class="finding-label">Where I Got Stuck</div>
+<p>The ordinal quality columns (Kitchen Qual, Exter Qual, etc.) were stored as strings like "Ex", "Gd", "TA", "Fa", "Po." Pandas rightly refused to compute correlations on string columns. I had to create a mapping dictionary (<code>qual_map</code>) and transform each one to numeric. The frustrating part was that <code>Fireplace Qu</code> and <code>Bsmt Qual</code> had NaN values for properties without fireplaces or basements. The <code>.map()</code> call silently returned NaN for those, which then caused the correlation calculation to drop those rows. I initially did not notice this and was getting slightly different correlation values depending on which features I included. The fix was understanding that Pandas drops NaN rows <em>pairwise</em> in correlation by default — so each correlation pair might use a different subset of rows. This is correct behaviour, but it tripped me up.</p>
+</div>
+
+<!-- Section 8 -->
+<h2 id="surprises">Surprises, Self-Critique &amp; Next Steps</h2>
+
+<div class="research-q">
+<div class="rq-label">Research Question</div>
+<div class="rq-text">What surprised me, where did my industry assumptions break down, and what would I investigate next?</div>
+<span class="code-ref">Retrospective</span>
+</div>
+
+<p><strong>Heating quality (r = 0.50) was surprisingly relevant.</strong> I would not have guessed that HVAC quality correlates as strongly as masonry veneer area. It raises the question of whether buyers are explicitly evaluating HVAC systems during inspections, or whether heating quality is another proxy for overall build standard. If it is the former, there is a marketing angle for HVAC suppliers that I had not considered.</p>
+
+<p><strong>The quality curve accelerates, it does not flatten.</strong> This was the most consequential surprise. The conventional wisdom in the trades is "don't over-capitalise" — meaning there is a ceiling above which spending more does not increase property value proportionally. The Ames data says the opposite: the premium end compounds. The marginal cost of upgrading finishes from quality 7 to quality 9 is far less than the $160K in additional property value associated with it.</p>
+
+<div class="finding reveal">
+<div class="finding-label">Honest Self-Critique</div>
+<p>Looking back, I should have done three things differently. First, this analysis is mostly bivariate — I compare one feature against price at a time. Building a multivariate regression model with interaction terms would let me isolate the independent contribution of each material and quality feature, controlling for confounders like lot size and location. Second, this dataset is from Ames, Iowa. I work in Sydney. Running the same analysis on Australian property data would test whether these patterns hold across markets. Third, pairing this data with material cost data would let me calculate actual ROI for each upgrade. Stone veneer is associated with $102K more in price, but what does it cost to install? That cost-to-value ratio is what clients actually need.</p>
+</div>
+
+<div class="finding reveal">
+<div class="finding-label">The Core Takeaway</div>
+<p>If I had to distil this entire analysis into one sentence for a client conversation, it would be this: <strong>How I build matters as much as how big I build.</strong> Quality of execution — materials, finishes, attention to detail — correlates with property value as strongly as square footage. That is the most useful thing I have learned from this data, and it aligns with what I have seen in five years of selling premium building materials.</p>
+</div>
+
 </div>
 
 <div class="footer">
-<p>Analysis by <a href="https://github.com/Tommy-Nguyen-Stonera">Tommy Nguyen</a> &bull; T-SQL on SQL Server &bull; Data: ABS Cat. 8731.0</p>
-<p>View the <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals">full repository</a> for queries and methodology</p>
-</div>
-
+<strong>Tommy Nguyen</strong> &middot; <a href="https://github.com/Tommy-Nguyen-Stonera">GitHub</a> &middot; <a href="https://tommy-nguyen-stonera.vercel.app">Portfolio</a><br>
+Data: Ames Housing Dataset (Dean De Cock, 2011) &middot; Tools: Python, Pandas, Matplotlib, Seaborn, NumPy<br>
+AI Tools: Claude and Gemini used for debugging and code suggestions. Analysis and interpretations are my own.
 </div>
 
 <script>
-window.addEventListener('scroll',function(){
-  var h=document.documentElement,b=document.body;
-  var st=h.scrollTop||b.scrollTop;
-  var sh=h.scrollHeight||b.scrollHeight;
-  var pct=(st/(sh-h.clientHeight))*100;
-  document.getElementById('progress-bar').style.width=pct+'%';
-});
-var obs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting) e.target.classList.add('visible');
-  });
-},{threshold:0.12});
-document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
-var tocLinks=document.querySelectorAll('#toc a');
-var sections=[];
-tocLinks.forEach(function(a){
-  var id=a.getAttribute('href').substring(1);
-  var el=document.getElementById(id);
-  if(el) sections.push({el:el,link:a});
-});
-window.addEventListener('scroll',function(){
-  var current=null;
-  sections.forEach(function(s){
-    if(s.el.getBoundingClientRect().top<=120) current=s;
-  });
-  tocLinks.forEach(function(a){a.classList.remove('active');});
-  if(current) current.link.classList.add('active');
-});
-tocLinks.forEach(function(a){
-  a.addEventListener('click',function(e){
-    e.preventDefault();
-    var id=this.getAttribute('href').substring(1);
-    var el=document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-  });
-});
+window.addEventListener('scroll',()=>{const s=document.documentElement,p=(s.scrollTop/(s.scrollHeight-s.clientHeight))*100;document.getElementById('progress-bar').style.width=p+'%'});
+const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const tocItems=document.querySelectorAll('#toc li');
+const sections=Array.from(tocItems).map(li=>document.getElementById(li.dataset.section)).filter(Boolean);
+window.addEventListener('scroll',()=>{let current='';sections.forEach(s=>{if(s.getBoundingClientRect().top<=120)current=s.id});tocItems.forEach(li=>{li.classList.toggle('active',li.dataset.section===current)})});
+tocItems.forEach(li=>li.addEventListener('click',()=>{const el=document.getElementById(li.dataset.section);if(el)el.scrollIntoView({behavior:'smooth'})}));
 </script>
 </body>
 </html>
