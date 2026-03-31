@@ -127,7 +127,7 @@ The other surprise was NSW's relative weakness. Working in Sydney, you feel like
 
 ## A Note on AI Tools
 
-I used Claude and Gemini when I hit syntax issues or needed a second opinion on query structure. The analysis approach, business questions, and all interpretations are my own work - informed by five years of working in this industry.
+I used AI coding assistants when I hit syntax issues or needed a second opinion on query structure. The analysis approach, business questions, and all interpretations are my own work - informed by five years of working in this industry.
 
 ---
 
