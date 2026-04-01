@@ -60,6 +60,12 @@ p{margin:12px 0;font-size:15px}
 </head>
 <body>
 <div id="progress-bar"></div>
+<div style="max-width:900px;margin:20px auto;padding:20px 30px;background:#f0f4f8;border-radius:8px;text-align:center;">
+    <h3 style="color:#0f3460;margin-bottom:12px;font-size:1rem;">Download Dataset</h3>
+    <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/raw/main/data/building_approvals_full.csv" download style="display:inline-block;margin:5px 10px;padding:8px 20px;background:#0f3460;color:white;border-radius:4px;text-decoration:none;font-size:0.85rem;">building_approvals_full.csv</a>
+    <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/raw/main/data/building_approvals_raw.csv" download style="display:inline-block;margin:5px 10px;padding:8px 20px;background:#0f3460;color:white;border-radius:4px;text-decoration:none;font-size:0.85rem;">building_approvals_raw.csv</a>
+</div>
+
 
 <nav id="toc"><ul>
 <li data-section="overview">Overview</li>
@@ -372,11 +378,7 @@ window.addEventListener('scroll',()=>{let current='';sections.forEach(s=>{if(s.g
 tocItems.forEach(li=>li.addEventListener('click',()=>{const el=document.getElementById(li.dataset.section);if(el)el.scrollIntoView({behavior:'smooth'})}));
 </script>
 
-<div style="max-width: 900px; margin: 30px auto; padding: 20px 30px; background: #f0f4f8; border-radius: 8px; text-align: center;">
-    <h3 style="color: #0f3460; margin-bottom: 12px; font-size: 1rem;">Download Dataset</h3>
-    <a href="https://raw.githubusercontent.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/main/data/building_approvals_full.csv" download style="display: inline-block; margin: 5px 10px; padding: 8px 20px; background: #0f3460; color: white; border-radius: 4px; text-decoration: none; font-size: 0.85rem;">building_approvals_full.csv</a>
-    <a href="https://raw.githubusercontent.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/main/data/building_approvals_raw.csv" download style="display: inline-block; margin: 5px 10px; padding: 8px 20px; background: #0f3460; color: white; border-radius: 4px; text-decoration: none; font-size: 0.85rem;">building_approvals_raw.csv</a>
-</div>
+
 
 </body>
 </html>
