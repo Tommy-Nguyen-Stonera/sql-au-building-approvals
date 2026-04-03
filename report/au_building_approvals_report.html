@@ -60,12 +60,11 @@ p{margin:12px 0;font-size:15px}
 </head>
 <body>
 <div id="progress-bar"></div>
-<div style="max-width:900px;margin:20px auto;padding:20px 30px;background:#f0f4f8;border-radius:8px;text-align:center;">
-    <h3 style="color:#0f3460;margin-bottom:12px;font-size:1rem;">Download Dataset</h3>
-    <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/raw/main/data/building_approvals_full.csv" download style="display:inline-block;margin:5px 10px;padding:8px 20px;background:#0f3460;color:white;border-radius:4px;text-decoration:none;font-size:0.85rem;">building_approvals_full.csv</a>
-    <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/raw/main/data/building_approvals_raw.csv" download style="display:inline-block;margin:5px 10px;padding:8px 20px;background:#0f3460;color:white;border-radius:4px;text-decoration:none;font-size:0.85rem;">building_approvals_raw.csv</a>
+<div style="background:#F0F4FA;border:1px solid #C5D4E8;border-radius:8px;padding:16px 20px;margin-bottom:32px;max-width:900px;margin-left:auto;margin-right:auto;">
+    <div style="font-size:10pt;font-weight:700;color:#1A3A6B;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">How to use this report</div>
+    <p style="font-size:10pt;color:#444;margin-bottom:8px;">Each section covers a research question with findings and the approach I used. Scroll through or use the navigation to jump to specific sections.</p>
+    <p style="font-size:10pt;color:#444;margin-bottom:0;">Download dataset: <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/raw/main/data/building_approvals_full.csv" style="color:#1A3A6B;font-weight:600;text-decoration:underline;">building_approvals_full.csv</a>  <a href="https://github.com/Tommy-Nguyen-Stonera/sql-au-building-approvals/raw/main/data/building_approvals_raw.csv" style="color:#1A3A6B;font-weight:600;text-decoration:underline;">building_approvals_raw.csv</a></p>
 </div>
-
 
 <nav id="toc"><ul>
 <li data-section="overview">Overview</li>
@@ -81,7 +80,7 @@ p{margin:12px 0;font-size:15px}
 <div class="cover">
 <h1>Building Materials &amp; Property Values</h1>
 <p class="subtitle">Which Finishes Actually Drive Home Prices?</p>
-<p class="meta">Tommy Nguyen &middot; Ames Housing Dataset &middot; 2,930 Properties &middot; 82 Features</p>
+<p class="meta">Tommy Nguyen , Ames Housing Dataset , 2,930 Properties , 82 Features</p>
 </div>
 
 <div class="wrapper">
@@ -229,7 +228,7 @@ axes[<span class="num">1</span>].<span class="fn">bar</span>(kq_medians.index, k
 
 <div class="finding reveal">
 <div class="finding-label">The Pivot Moment</div>
-<p>I started this analysis expecting exterior cladding to be the strongest material-related predictor — because that is what I sell. But kitchen quality beats every individual exterior material comparison. The interior finish quality drives more value than the facade. This shifted my entire framing: I went from "which material matters most?" to "how well should I build, regardless of material?" The quality of execution matters more than the specific product. From my years in building materials, this resonates — the best tile installation with mid-range tiles looks better than a poor installation with premium tiles.</p>
+<p>I started this analysis expecting exterior cladding to be the strongest material-related predictor — because that is what I sell. But kitchen quality beats every individual exterior material comparison. The interior finish quality drives more value than the facade. This shifted my entire framing: I went from "which material matters most?" to "how well should I build, regardless of material?" The quality of execution matters more than the specific product.</p>
 </div>
 
 <!-- Section 5 -->
@@ -259,7 +258,7 @@ foundation_labels = {<span class="str">"PConc"</span>: <span class="str">"Poured
 
 <div class="finding reveal">
 <div class="finding-label">Where I Got Stuck</div>
-<p>This finding made me cautious about every other comparison. If foundation type is really just a proxy for overall build quality, then how many of my other material comparisons are also proxies? The correlation heatmap was partly motivated by this question — I wanted to see which features had independent predictive power versus which were just riding along with overall quality. From my years in building materials, I know that foundation choices are made by builders, not homeowners — they are a build-quality signal, not a consumer preference signal. That distinction matters for how I interpret every chart in this report.</p>
+<p>This finding made me cautious about every other comparison. If foundation type is really just a proxy for overall build quality, then how many of my other material comparisons are also proxies? The correlation heatmap was partly motivated by this question — I wanted to see which features had independent predictive power versus which were just riding along with overall quality. From my years in building materials, I know that foundation choices are made by builders, not homeowners — they are a build-quality signal, not a consumer preference signal.</p>
 </div>
 
 <!-- Section 6 -->
@@ -352,7 +351,7 @@ sns.<span class="fn">heatmap</span>(price_corr, annot=<span class="kw">True</spa
 
 <div class="finding reveal">
 <div class="finding-label">Honest Self-Critique</div>
-<p>Looking back, I should have done three things differently. First, this analysis is mostly bivariate — I compare one feature against price at a time. Building a multivariate regression model with interaction terms would let me isolate the independent contribution of each material and quality feature, controlling for confounders like lot size and location. Second, this dataset is from Ames, Iowa. I work in Sydney. Running the same analysis on Australian property data would test whether these patterns hold across markets. Third, pairing this data with material cost data would let me calculate actual ROI for each upgrade. Stone veneer is associated with $102K more in price, but what does it cost to install? That cost-to-value ratio is what clients actually need.</p>
+<p>Looking back, I should have done three things differently. First, this analysis is mostly bivariate — I compare one feature against price at a time. Building a multivariate regression model with interaction terms would let me isolate the independent contribution of each material and quality feature, controlling for confounders like lot size and location. Second, this dataset is from Ames, Iowa.</p>
 </div>
 
 <div class="finding reveal">
@@ -363,9 +362,8 @@ sns.<span class="fn">heatmap</span>(price_corr, annot=<span class="kw">True</spa
 </div>
 
 <div class="footer">
-<strong>Tommy Nguyen</strong> &middot; <a href="https://github.com/Tommy-Nguyen-Stonera">GitHub</a> &middot; <a href="https://tommy-nguyen-stonera.vercel.app">Portfolio</a><br>
-Data: Ames Housing Dataset (Dean De Cock, 2011) &middot; Tools: Python, Pandas, Matplotlib, Seaborn, NumPy<br>
-AI Tools: AI coding assistants used for debugging and code suggestions. Analysis and interpretations are my own.
+<strong>Tommy Nguyen</strong> , <a href="https://github.com/Tommy-Nguyen-Stonera">GitHub</a> , <a href="https://tommy-nguyen-stonera.vercel.app">Portfolio</a><br>
+
 </div>
 
 <script>
@@ -377,8 +375,6 @@ const sections=Array.from(tocItems).map(li=>document.getElementById(li.dataset.s
 window.addEventListener('scroll',()=>{let current='';sections.forEach(s=>{if(s.getBoundingClientRect().top<=120)current=s.id});tocItems.forEach(li=>{li.classList.toggle('active',li.dataset.section===current)})});
 tocItems.forEach(li=>li.addEventListener('click',()=>{const el=document.getElementById(li.dataset.section);if(el)el.scrollIntoView({behavior:'smooth'})}));
 </script>
-
-
 
 </body>
 </html>
