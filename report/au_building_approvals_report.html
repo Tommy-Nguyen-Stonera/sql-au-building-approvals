@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Building Materials &amp; Home Features: Impact on Property Values — Tommy Nguyen</title>
+<title>Building Materials &amp; Home Features: Impact on Property Values | Tommy Nguyen</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#1A3A6B;--gold:#E8A500;--light-blue:#F0F4FA;--light-gold:#FFD055;--cream:#FFFDF0;--dark:#252423;--code-bg:#1e2a3a;--code-text:#c9d1d9}
@@ -94,7 +94,7 @@ p{margin:12px 0;font-size:15px}
 
 <div class="guide-box">
 <h3>How to Read This Report</h3>
-<p>After five years selling stone, tiles, and flooring across Sydney, I tested my industry instincts against hard data. This report analyses the Ames Housing dataset — 2,930 residential sales with 82 features covering everything from exterior cladding to kitchen quality.</p>
+<p>After five years selling stone, tiles, and flooring across Sydney, I tested my industry instincts against hard data. This report analyses the Ames Housing dataset: 2,930 residential sales with 82 features covering everything from exterior cladding to kitchen quality.</p>
 <ul>
 <li><strong>Research Question</strong> boxes frame each business problem from a building materials perspective</li>
 <li><strong>Code blocks</strong> show the Pandas and Matplotlib approach used</li>
@@ -126,7 +126,7 @@ df = pd.<span class="fn">read_csv</span>(<span class="str">"ames_housing.tsv"</s
 
 <div class="finding reveal">
 <div class="finding-label">Where I Got Stuck Early</div>
-<p>My first attempt used <code>pd.read_csv()</code> without specifying <code>sep="\t"</code> — the file was tab-separated, not comma-separated. Pandas silently loaded the entire row as a single column instead of throwing an error. I had a DataFrame with 2,930 rows and 1 column, and it took me embarrassingly long to realise what happened. The fix was trivial (<code>sep="\t"</code>), but it is a reminder that Pandas will happily give me a "valid" result that is completely wrong. I always check <code>df.shape</code> and <code>df.head()</code> immediately after loading.</p>
+<p>My first attempt used <code>pd.read_csv()</code> without specifying <code>sep="\t"</code>. The file was tab-separated, not comma-separated. Pandas silently loaded the entire row as a single column instead of throwing an error. I had a DataFrame with 2,930 rows and 1 column, and it took me embarrassingly long to realise what happened. The fix was trivial (<code>sep="\t"</code>), but it is a reminder that Pandas will happily give me a "valid" result that is completely wrong. I always check <code>df.shape</code> and <code>df.head()</code> immediately after loading.</p>
 </div>
 
 <!-- Section 2 -->
@@ -135,7 +135,7 @@ df = pd.<span class="fn">read_csv</span>(<span class="str">"ames_housing.tsv"</s
 <div class="research-q">
 <div class="rq-label">Research Question</div>
 <div class="rq-text">Which exterior cladding materials are associated with the highest property values? If a homeowner chooses between vinyl, brick, or cement board, what does the data say?</div>
-<span class="code-ref">analysis.py — Chart 1</span>
+<span class="code-ref">analysis.py - Chart 1</span>
 </div>
 
 <div class="code-block">
@@ -150,7 +150,7 @@ ext_order = df.<span class="fn">groupby</span>(<span class="str">"Exterior_Clean
 sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Exterior_Clean"</span>, y=<span class="str">"SalePrice"</span>, order=ext_order)
 </div>
 
-<p>I initially plotted all exterior materials separately, but some (like stone and asbestos shingle) had fewer than 10 observations. The box plots for those materials were visually dramatic but statistically meaningless — one outlier could swing the median by $50K. I set a threshold of 30 observations and grouped everything below that into "Other." This is a trade-off: I lose the ability to comment on rare materials, but I gain confidence that the patterns I report are real.</p>
+<p>I initially plotted all exterior materials separately, but some (like stone and asbestos shingle) had fewer than 10 observations. The box plots for those materials were visually dramatic but statistically meaningless, since one outlier could swing the median by $50K. I set a threshold of 30 observations and grouped everything below that into "Other." This is a trade-off: I lose the ability to comment on rare materials, but I gain confidence that the patterns I report are real.</p>
 
 <div class="stat-row reveal">
 <div class="stat"><div class="value">$238K</div><div class="label">Cement Board (Top)</div></div>
@@ -160,12 +160,12 @@ sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Exterior_Clean
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Cement board (fibre cement) tops the list at $238K median — $35K above vinyl siding and $103K above metal siding. It is durable, fire-resistant, low-maintenance, and increasingly specified by architects. In Australia, brands like James Hardie dominate and the product carries a premium perception that clearly translates to sale price.</p>
+<p>Cement board (fibre cement) tops the list at $238K median, $35K above vinyl siding and $103K above metal siding. It is durable, fire-resistant, low-maintenance, and increasingly specified by architects. In Australia, brands like James Hardie dominate and the product carries a premium perception that clearly translates to sale price.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">Business Implication</div>
-<p>The $35K gap between cement board and vinyl gives a concrete answer to the upgrade question. The material cost difference is a fraction of that gap. For any homeowner weighing the upgrade, the data supports going premium on exterior cladding — it is one of the more accessible ways to associate a property with higher value.</p>
+<p>The $35K gap between cement board and vinyl gives a concrete answer to the upgrade question. The material cost difference is a fraction of that gap. For any homeowner weighing the upgrade, the data supports going premium on exterior cladding, one of the more accessible ways to associate a property with higher value.</p>
 </div>
 
 <!-- Section 3 -->
@@ -174,7 +174,7 @@ sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Exterior_Clean
 <div class="research-q">
 <div class="rq-label">Research Question</div>
 <div class="rq-text">How much does overall build quality actually matter? Is the relationship linear, or do the top tiers command a disproportionate premium?</div>
-<span class="code-ref">analysis.py — Chart 2</span>
+<span class="code-ref">analysis.py - Chart 2</span>
 </div>
 
 <div class="code-block">
@@ -183,10 +183,10 @@ sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Overall Qual"<
 <span class="cm"># Median price per quality level</span><br>
 qual_med = df.<span class="fn">groupby</span>(<span class="str">"Overall Qual"</span>)[<span class="str">"SalePrice"</span>].<span class="fn">median</span>()<br>
 <span class="cm"># Quality 5 to 7: +$67,000</span><br>
-<span class="cm"># Quality 7 to 9: +$160,000 — it accelerates!</span>
+<span class="cm"># Quality 7 to 9: +$160,000 - it accelerates!</span>
 </div>
 
-<p>Each quality point adds roughly $40,000 to median sale price, but the relationship is not linear — it accelerates at the top end. Quality 5 to 7 adds $67K, but quality 7 to 9 adds $160K. That acceleration is the most important finding in this entire analysis.</p>
+<p>Each quality point adds roughly $40,000 to median sale price, but the relationship is not linear; it accelerates at the top end. Quality 5 to 7 adds $67K, but quality 7 to 9 adds $160K. That acceleration is the most important finding in this entire analysis.</p>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
@@ -195,7 +195,7 @@ qual_med = df.<span class="fn">groupby</span>(<span class="str">"Overall Qual"</
 
 <div class="finding reveal">
 <div class="finding-label">What I Expected vs What I Found</div>
-<p>I assumed diminishing returns at the top end — that going from quality 8 to 9 would add less than going from 5 to 6. The opposite is true. Premium finishes compound in value. The market pays disproportionately more for excellence — which challenges the conventional wisdom I hear from builders every week: "Don't over-capitalise." The data suggests what builders call over-capitalisation is not over-capitalisation at all, at least at the premium end.</p>
+<p>I assumed diminishing returns at the top end, that going from quality 8 to 9 would add less than going from 5 to 6. The opposite is true. Premium finishes compound in value. The market pays disproportionately more for excellence, which challenges the conventional wisdom I hear from builders every week: "Don't over-capitalise." The data suggests what builders call over-capitalisation is not over-capitalisation at all, at least at the premium end.</p>
 </div>
 
 <!-- Section 4 -->
@@ -203,8 +203,8 @@ qual_med = df.<span class="fn">groupby</span>(<span class="str">"Overall Qual"</
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="rq-text">What is the real dollar premium for an excellent kitchen vs an average one? Kitchens are where homeowners spend the most on stone benchtops — does the data support that investment?</div>
-<span class="code-ref">analysis.py — Chart 3</span>
+<div class="rq-text">What is the real dollar premium for an excellent kitchen vs an average one? Kitchens are where homeowners spend the most on stone benchtops. Does the data support that investment?</div>
+<span class="code-ref">analysis.py - Chart 3</span>
 </div>
 
 <div class="code-block">
@@ -223,12 +223,12 @@ axes[<span class="num">1</span>].<span class="fn">bar</span>(kq_medians.index, k
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Excellent kitchen: $189K premium over Average. This validates the investment in quality kitchen finishes — stone benchtops, quality cabinetry, good hardware. The data shows buyers reward kitchen quality heavily. Kitchen quality (r = 0.67) outweighs every individual exterior material comparison.</p>
+<p>Excellent kitchen: $189K premium over Average. This validates the investment in quality kitchen finishes: stone benchtops, quality cabinetry, good hardware. The data shows buyers reward kitchen quality heavily. Kitchen quality (r = 0.67) outweighs every individual exterior material comparison.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">The Pivot Moment</div>
-<p>I started this analysis expecting exterior cladding to be the strongest material-related predictor — because that is what I sell. But kitchen quality beats every individual exterior material comparison. The interior finish quality drives more value than the facade. This shifted my entire framing: I went from "which material matters most?" to "how well should I build, regardless of material?" The quality of execution matters more than the specific product.</p>
+<p>I started this analysis expecting exterior cladding to be the strongest material-related predictor, because that is what I sell. But kitchen quality beats every individual exterior material comparison. The interior finish quality drives more value than the facade. This shifted my entire framing: I went from "which material matters most?" to "how well should I build, regardless of material?" The quality of execution matters more than the specific product.</p>
 </div>
 
 <!-- Section 5 -->
@@ -236,8 +236,8 @@ axes[<span class="num">1</span>].<span class="fn">bar</span>(kq_medians.index, k
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="rq-text">Does foundation type predict sale price? Poured concrete vs cinder block — is there a measurable difference?</div>
-<span class="code-ref">analysis.py — Chart 4</span>
+<div class="rq-text">Does foundation type predict sale price? Poured concrete vs cinder block: is there a measurable difference?</div>
+<span class="code-ref">analysis.py - Chart 4</span>
 </div>
 
 <div class="code-block">
@@ -249,16 +249,16 @@ foundation_labels = {<span class="str">"PConc"</span>: <span class="str">"Poured
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"BrkTil"</span>: <span class="str">"Brick &amp;\nTile"</span>, <span class="str">"Slab"</span>: <span class="str">"Slab"</span>}
 </div>
 
-<p>Poured concrete foundations lead at $208,400 median — about $43K above cinder block ($165K). But this is less about the foundation itself and more about what it signals. Poured concrete is more expensive to construct, so it appears in higher-spec builds.</p>
+<p>Poured concrete foundations lead at $208,400 median, about $43K above cinder block ($165K). But this is less about the foundation itself and more about what it signals. Poured concrete is more expensive to construct, so it appears in higher-spec builds.</p>
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Poured concrete foundation: $208K median, $43K above cinder block. However, this is a textbook confounding variable — the premium likely reflects overall build quality rather than buyers specifically valuing the foundation material.</p>
+<p>Poured concrete foundation: $208K median, $43K above cinder block. However, this is a textbook confounding variable: the premium likely reflects overall build quality rather than buyers specifically valuing the foundation material.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">Where I Got Stuck</div>
-<p>This finding made me cautious about every other comparison. If foundation type is really just a proxy for overall build quality, then how many of my other material comparisons are also proxies? The correlation heatmap was partly motivated by this question — I wanted to see which features had independent predictive power versus which were just riding along with overall quality. From my years in building materials, I know that foundation choices are made by builders, not homeowners — they are a build-quality signal, not a consumer preference signal.</p>
+<p>This finding made me cautious about every other comparison. If foundation type is really just a proxy for overall build quality, then how many of my other material comparisons are also proxies? The correlation heatmap was partly motivated by this question: I wanted to see which features had independent predictive power versus which were just riding along with overall quality. From my years in building materials, I know that foundation choices are made by builders, not homeowners. They are a build-quality signal, not a consumer preference signal.</p>
 </div>
 
 <!-- Section 6 -->
@@ -266,8 +266,8 @@ foundation_labels = {<span class="str">"PConc"</span>: <span class="str">"Poured
 
 <div class="research-q">
 <div class="rq-label">Research Question</div>
-<div class="rq-text">How much value does masonry veneer add over no veneer? Stone and brick face are products I sell regularly — this has direct commercial relevance.</div>
-<span class="code-ref">analysis.py — Chart 5</span>
+<div class="rq-text">How much value does masonry veneer add over no veneer? Stone and brick face are products I sell regularly, and this has direct commercial relevance.</div>
+<span class="code-ref">analysis.py - Chart 5</span>
 </div>
 
 <div class="code-block">
@@ -278,7 +278,7 @@ vnr_order = df.<span class="fn">groupby</span>(<span class="str">"Mas Vnr Type"<
 sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Mas Vnr Type"</span>, y=<span class="str">"SalePrice"</span>, order=vnr_order)
 </div>
 
-<p>This is one of the most commercially relevant findings. Stone veneer sits at $245,000 median versus no veneer at $143,000 — a $102K difference. Brick face veneer also commands a premium at $205K median.</p>
+<p>This is one of the most commercially relevant findings. Stone veneer sits at $245,000 median versus no veneer at $143,000, a $102K difference. Brick face veneer also commands a premium at $205K median.</p>
 
 <div class="stat-row reveal">
 <div class="stat"><div class="value">$245K</div><div class="label">Stone Veneer Median</div></div>
@@ -288,12 +288,12 @@ sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Mas Vnr Type"<
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Stone veneer is associated with $102K more in median price than no veneer. The material and installation cost is a fraction of that differential, making it one of the highest-ROI exterior improvements a homeowner can consider. Masonry veneer area also correlates at r = 0.51 — the sheer amount of stone on a property has moderate independent predictive power.</p>
+<p>Stone veneer is associated with $102K more in median price than no veneer. The material and installation cost is a fraction of that differential, making it one of the highest-ROI exterior improvements a homeowner can consider. Masonry veneer area also correlates at r = 0.51, and the sheer amount of stone on a property has moderate independent predictive power.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">Business Implication</div>
-<p>Stone veneer is a product I sell, and this gives me a data point for client conversations. Obviously correlation is not causation — homes with stone veneer tend to be higher-spec builds overall. But the association is strong, and the practical reality is that stone veneer is one of the more accessible exterior upgrades. I would now reference this in sales conversations: "Data from 2,930 property sales shows a $102K median price association with stone veneer."</p>
+<p>Stone veneer is a product I sell, and this gives me a data point for client conversations. Obviously correlation is not causation. Homes with stone veneer tend to be higher-spec builds overall. But the association is strong, and the practical reality is that stone veneer is one of the more accessible exterior upgrades. I would now reference this in sales conversations: "Data from 2,930 property sales shows a $102K median price association with stone veneer."</p>
 </div>
 
 <!-- Section 7 -->
@@ -302,7 +302,7 @@ sns.<span class="fn">boxplot</span>(data=df, x=<span class="str">"Mas Vnr Type"<
 <div class="research-q">
 <div class="rq-label">Research Question</div>
 <div class="rq-text">Which material and quality features have the strongest overall correlation with price? Beyond individual comparisons, what does the big picture look like?</div>
-<span class="code-ref">analysis.py — Chart 6</span>
+<span class="code-ref">analysis.py - Chart 6</span>
 </div>
 
 <div class="code-block">
@@ -328,12 +328,12 @@ sns.<span class="fn">heatmap</span>(price_corr, annot=<span class="kw">True</spa
 
 <div class="finding reveal">
 <div class="finding-label">Key Finding</div>
-<p>Quality ratings consistently outperform raw square footage in predicting price. The top five correlates include four quality measures and only one area measure. <strong>How I build matters as much as how big I build.</strong> Overall Quality dominates at r = 0.80 — nothing else comes close.</p>
+<p>Quality ratings consistently outperform raw square footage in predicting price. The top five correlates include four quality measures and only one area measure. <strong>How I build matters as much as how big I build.</strong> Overall Quality dominates at r = 0.80. Nothing else comes close.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">Where I Got Stuck</div>
-<p>The ordinal quality columns (Kitchen Qual, Exter Qual, etc.) were stored as strings like "Ex", "Gd", "TA", "Fa", "Po." Pandas rightly refused to compute correlations on string columns. I had to create a mapping dictionary (<code>qual_map</code>) and transform each one to numeric. The frustrating part was that <code>Fireplace Qu</code> and <code>Bsmt Qual</code> had NaN values for properties without fireplaces or basements. The <code>.map()</code> call silently returned NaN for those, which then caused the correlation calculation to drop those rows. I initially did not notice this and was getting slightly different correlation values depending on which features I included. The fix was understanding that Pandas drops NaN rows <em>pairwise</em> in correlation by default — so each correlation pair might use a different subset of rows. This is correct behaviour, but it tripped me up.</p>
+<p>The ordinal quality columns (Kitchen Qual, Exter Qual, etc.) were stored as strings like "Ex", "Gd", "TA", "Fa", "Po." Pandas rightly refused to compute correlations on string columns. I had to create a mapping dictionary (<code>qual_map</code>) and transform each one to numeric. The frustrating part was that <code>Fireplace Qu</code> and <code>Bsmt Qual</code> had NaN values for properties without fireplaces or basements. The <code>.map()</code> call silently returned NaN for those, which then caused the correlation calculation to drop those rows. I initially did not notice this and was getting slightly different correlation values depending on which features I included. The fix was understanding that Pandas drops NaN rows <em>pairwise</em> in correlation by default, so each correlation pair might use a different subset of rows. This is correct behaviour, but it tripped me up.</p>
 </div>
 
 <!-- Section 8 -->
@@ -347,16 +347,16 @@ sns.<span class="fn">heatmap</span>(price_corr, annot=<span class="kw">True</spa
 
 <p><strong>Heating quality (r = 0.50) was surprisingly relevant.</strong> I would not have guessed that HVAC quality correlates as strongly as masonry veneer area. It raises the question of whether buyers are explicitly evaluating HVAC systems during inspections, or whether heating quality is another proxy for overall build standard. If it is the former, there is a marketing angle for HVAC suppliers that I had not considered.</p>
 
-<p><strong>The quality curve accelerates, it does not flatten.</strong> This was the most consequential surprise. The conventional wisdom in the trades is "don't over-capitalise" — meaning there is a ceiling above which spending more does not increase property value proportionally. The Ames data says the opposite: the premium end compounds. The marginal cost of upgrading finishes from quality 7 to quality 9 is far less than the $160K in additional property value associated with it.</p>
+<p><strong>The quality curve accelerates, it does not flatten.</strong> This was the most consequential surprise. The conventional wisdom in the trades is "don't over-capitalise," meaning there is a ceiling above which spending more does not increase property value proportionally. The Ames data says the opposite: the premium end compounds. The marginal cost of upgrading finishes from quality 7 to quality 9 is far less than the $160K in additional property value associated with it.</p>
 
 <div class="finding reveal">
 <div class="finding-label">Honest Self-Critique</div>
-<p>Looking back, I should have done three things differently. First, this analysis is mostly bivariate — I compare one feature against price at a time. Building a multivariate regression model with interaction terms would let me isolate the independent contribution of each material and quality feature, controlling for confounders like lot size and location. Second, this dataset is from Ames, Iowa.</p>
+<p>Looking back, I should have done three things differently. First, this analysis is mostly bivariate: I compare one feature against price at a time. Building a multivariate regression model with interaction terms would let me isolate the independent contribution of each material and quality feature, controlling for confounders like lot size and location. Second, this dataset is from Ames, Iowa.</p>
 </div>
 
 <div class="finding reveal">
 <div class="finding-label">The Core Takeaway</div>
-<p>If I had to distil this entire analysis into one sentence for a client conversation, it would be this: <strong>How I build matters as much as how big I build.</strong> Quality of execution — materials, finishes, attention to detail — correlates with property value as strongly as square footage. That is the most useful thing I have learned from this data, and it aligns with what I have seen in five years of selling premium building materials.</p>
+<p>If I had to distil this entire analysis into one sentence for a client conversation, it would be this: <strong>How I build matters as much as how big I build.</strong> Quality of execution - materials, finishes, attention to detail - correlates with property value as strongly as square footage. That is the most useful thing I have learned from this data, and it aligns with what I have seen in five years of selling premium building materials.</p>
 </div>
 
 </div>

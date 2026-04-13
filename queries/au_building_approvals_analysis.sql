@@ -1,7 +1,7 @@
 -- ============================================================================
 -- AUSTRALIAN BUILDING APPROVALS ANALYSIS
--- Dataset: Australian Bureau of Statistics (ABS) — Building Approvals, Australia
--- Catalogue: 8731.0 | Period: 2010–2025 (monthly data, 192 months)
+-- Dataset: Australian Bureau of Statistics (ABS), Building Approvals, Australia
+-- Catalogue: 8731.0 | Period: 2010-2025 (monthly data, 192 months)
 -- Coverage: All 8 states/territories, 3.1M+ dwelling approvals, $1.97T total value
 -- Author: Tommy Nguyen
 -- ============================================================================
@@ -20,7 +20,7 @@
 
 
 -- ============================================================================
--- QUERY 1: National Overview — Total Approvals and Value by Year
+-- QUERY 1: National Overview - Total Approvals and Value by Year
 -- ============================================================================
 -- RESEARCH QUESTION: How has construction activity changed over the last 16 years?
 -- Before drilling into any specifics, I need to see the macro trajectory.
@@ -33,7 +33,7 @@
 -- WHAT I FOUND: National approvals peaked at 239,735 in 2015 and have never
 -- returned to that level. The 2021 stimulus boom (228,995) came close but was
 -- followed by sharp declines. Meanwhile, total VALUE hit a record $198.8B in
--- 2025 despite lower counts — the market is shifting to fewer, larger projects.
+-- 2025 despite lower counts, the market is shifting to fewer, larger projects.
 -- ============================================================================
 
 WITH YearlyTotals AS (
@@ -72,7 +72,7 @@ ORDER BY ApprovalYear;
 
 
 -- ============================================================================
--- QUERY 2: State Comparison — Ranking by Total Approvals and Value
+-- QUERY 2: State Comparison - Ranking by Total Approvals and Value
 -- ============================================================================
 -- RESEARCH QUESTION: Which states drive the most construction, and what is
 -- each state's share of the national market?
@@ -84,7 +84,7 @@ ORDER BY ApprovalYear;
 -- WHAT I FOUND: Victoria leads with 31.1% of all approvals (971,368),
 -- followed by NSW at 27.6% (863,712). Together, the top 4 states (VIC, NSW,
 -- QLD, WA) account for 89.4% of all national approvals. The NT contributes
--- just 0.6% — essentially a rounding error at the national level.
+-- just 0.6%, essentially a rounding error at the national level.
 -- ============================================================================
 
 WITH StateTotals AS (
@@ -115,7 +115,7 @@ ORDER BY s.TotalApprovals DESC;
 
 
 -- ============================================================================
--- QUERY 3: NSW vs Other Major States — Year-over-Year Trend
+-- QUERY 3: NSW vs Other Major States - Year-over-Year Trend
 -- ============================================================================
 -- RESEARCH QUESTION: How does NSW construction compare to VIC, QLD, and WA
 -- over time? As someone who has worked across NSW for 5+ years, I wanted to
@@ -126,7 +126,7 @@ ORDER BY s.TotalApprovals DESC;
 --
 -- WHAT I FOUND: NSW only led VIC in 3 out of 16 years (2015-2017), driven by
 -- the Sydney apartment boom. Since 2018, VIC has pulled ahead and the gap is
--- widening. NSW dropped from 74,699 (2016 peak) to 44,185 (2024) — a 40.8%
+-- widening. NSW dropped from 74,699 (2016 peak) to 44,185 (2024), a 40.8%
 -- decline. VIC showed more resilience, holding above 50,000 even in weak years.
 -- ============================================================================
 
@@ -143,7 +143,7 @@ ORDER BY ApprovalYear;
 
 
 -- ============================================================================
--- QUERY 4: Dwelling Type Breakdown — Houses vs Apartments vs Other
+-- QUERY 4: Dwelling Type Breakdown - Houses vs Apartments vs Other
 -- ============================================================================
 -- RESEARCH QUESTION: What types of buildings are being approved? Has the mix
 -- between houses and higher-density dwellings shifted over time?
@@ -152,7 +152,7 @@ ORDER BY ApprovalYear;
 -- calculate each type's percentage share of the annual total using a JOIN
 -- against a year-level CTE.
 --
--- WHAT I FOUND: The dwelling mix tells a story about urban densification.
+-- WHAT I FOUND: The dwelling mix shows a clear shift toward higher density.
 -- Houses and apartments require fundamentally different materials (concrete
 -- vs timber framing, bulk supplies vs precision finishing), so shifts in
 -- the mix directly affect what a building materials supplier should stock.
@@ -185,7 +185,7 @@ ORDER BY d.ApprovalYear, d.TypeApprovals DESC;
 
 
 -- ============================================================================
--- QUERY 5: Seasonal Patterns — Monthly Pivot Table
+-- QUERY 5: Seasonal Patterns - Monthly Pivot Table
 -- ============================================================================
 -- RESEARCH QUESTION: Do building approvals follow a predictable seasonal
 -- pattern? If so, which months are strongest and weakest?
@@ -194,7 +194,7 @@ ORDER BY d.ApprovalYear, d.TypeApprovals DESC;
 -- calendar view. This makes it easy to read across months for any year
 -- or down months across years to spot the seasonal pattern.
 --
--- WHAT I FOUND: January is the dead zone — averaging just 1,563 approvals
+-- WHAT I FOUND: January is the dead zone, averaging just 1,563 approvals
 -- per state, 27.8% below the November peak of 2,164. The pattern makes
 -- sense: councils process backlogs before Christmas (Nov spike), January
 -- is holiday shutdown, and activity ramps from Feb-Mar. For a supplier,
@@ -222,10 +222,10 @@ ORDER BY PivotYear;
 
 
 -- ============================================================================
--- QUERY 6: COVID Impact Analysis — Pre-COVID vs COVID vs Recovery
+-- QUERY 6: COVID Impact Analysis - Pre-COVID vs COVID vs Recovery
 -- ============================================================================
 -- RESEARCH QUESTION: How did COVID-19 impact building approvals? I lived
--- through this period on the ground — builders panicking in March 2020,
+-- through this period on the ground, builders panicking in March 2020,
 -- then suddenly overwhelmed by demand six months later. What does the data say?
 --
 -- APPROACH: Use CASE expressions to classify each month into four periods
@@ -237,7 +237,7 @@ ORDER BY PivotYear;
 -- to pre-COVID levels (15,984). The real story is the 2021 recovery: monthly
 -- averages jumped to 19,083 (+19.4% above pre-COVID), driven by HomeBuilder
 -- grants and record-low interest rates. But the post-recovery period (2022+)
--- settled back to 15,115/month — slightly below pre-COVID baseline.
+-- settled back to 15,115/month, slightly below the pre-COVID baseline.
 -- ============================================================================
 
 WITH PeriodClassified AS (
@@ -293,7 +293,7 @@ ORDER BY
 -- are invisible in raw monthly data. VIC's rolling average peaked in mid-2017
 -- and has been on a gradual downtrend since. NSW shows a sharper decline from
 -- its 2016 peak. QLD's rolling average bottomed in mid-2019 and has been
--- climbing steadily — it is the only major state with a clearly positive
+-- climbing steadily. It is the only major state with a clearly positive
 -- trajectory heading into 2025.
 -- ============================================================================
 
@@ -320,7 +320,7 @@ ORDER BY State, Period;
 
 
 -- ============================================================================
--- QUERY 8: Value Trend — Total Approval Value by Year
+-- QUERY 8: Value Trend - Total Approval Value by Year
 -- ============================================================================
 -- RESEARCH QUESTION: Where is the money going? Count of approvals tells you
 -- about volume, but value reveals the size and economic weight of projects.
@@ -330,7 +330,7 @@ ORDER BY State, Period;
 -- cost at the time of approval.
 --
 -- WHAT I FOUND: Total approval value has climbed almost continuously,
--- from $79.9B (2010) to $198.8B (2025) — a 149% increase. The average
+-- from $79.9B (2010) to $198.8B (2025), a 149% increase. The average
 -- value per approval went from $439,360 (2010) to $1,017,764 (2025),
 -- more than doubling. This means the industry is approving fewer but
 -- significantly more expensive projects. For a materials supplier, this
@@ -353,10 +353,10 @@ ORDER BY ApprovalYear;
 
 
 -- ============================================================================
--- QUERY 9: Top Growth States — 2020-2024 vs 2015-2019
+-- QUERY 9: Top Growth States - 2020-2024 vs 2015-2019
 -- ============================================================================
 -- RESEARCH QUESTION: Which states are accelerating and which are losing
--- momentum? This is the forward-looking question — if I were advising a
+-- momentum? The forward-looking question: if I were advising a
 -- building materials company on where to expand, which states would I pick?
 --
 -- APPROACH: Compare total approvals in the most recent 5-year window
